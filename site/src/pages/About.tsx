@@ -162,7 +162,7 @@ const SECTIONS: Section[] = [
         three-season Form forecast, his ties to the side: captain, seasons there, home-grown; capped Indian or
         overseas, age, IPL balls, matches last season). Chosen on the deadlines up to 2024, it made the
         franchise's own call at the 2026 deadline (a mini year, like 2027) for 71% of players: level with simply
-        keeping everyone (69%), ahead of the old price-against-salary rule (62%). Its gain is the chance itself
+        keeping everyone (69%) and a little ahead of keeping anyone who played 7+ matches last season (68%); on the stars keeping all of them did better (92% against 88%). Its gain is the chance itself
         and finding who goes (61% of 2026's releases named); the 2027 calls were written to a dated file before
         the deadline, the first clean test. Franchises hardly weigh the cost in a mini year, so a second column,{" "}
         <strong>Should they?</strong>, asks whether he is worth what keeping him costs at the auction's prices. His playing time (the chance he plays in this

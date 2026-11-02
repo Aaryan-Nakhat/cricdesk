@@ -756,6 +756,16 @@ A rating model that let each player's scoring and survival skills correlate (V3)
 shipped one under a rule declared first and lost (held-out log-likelihood −0.60419 against −0.60357, the
 same calibration), so the shipped model stays.
 
+*Three numbers a fresh review flagged, checked 2026-11-01.* (1) "Kohli 79th": that is the pool sorted by
+the value for the coming season, a rate per 100 balls compared across batters and bowlers; the pool is ranked
+by expected season value, where he is 28th (aged 38, his career rating moved by the aging curve, which
+can't see his own last three seasons; section 4b), and his market price is 7.9 cr. (2) "Rahul Singh priced on
+21.3": that is the price recipe's internal input (a SMAT-only record, data to Dec 2024, with an sd of 12.9);
+with no IPL balls his market price is 0.47 cr and no list shows him high. (3) Thin records (Suryavanshi on 449
+IPL balls, Finn Allen, Jake Fraser-McGurk) lead lists sorted by the coming season's value. Shrinking them
+harder was tested twice and predicted worse (K2–K5 above), so the number stays and every page shows it with
+its range (± sd), the IPL balls behind it and last season's strike rate or economy beside it.
+
 **Why bowlers' wickets count for little.** A bowler's value splits into economy (runs saved) and wickets
 (extra wickets at what a wicket is worth where he bowls); the profile shows both parts. Between one IPL
 season and the next, a bowler's economy carries over (Spearman 0.31 for the model, 0.27 for his raw
@@ -1390,7 +1400,8 @@ ln(price / purse) = calibration(lin) + the shift of his group (overseas in a meg
 market price      = purse × e^(that), at least 0.3 cr (the lowest base price). No ceiling.
 upper quartile    = purse × e^(that + max(0, 0.20 − 0.12 × that)): the 75th percentile of the
                     out-of-fold residuals at that prediction (pricing._upper); until 2026-10-30 the
-                    same price for an index 0.674 residual sd higher
+                    same price for an index 0.674 residual sd higher; for a player whose last
+                    market verdict was 10 cr+, the median × e^0.80 (since 2026-11-01, below)
 P(bought)         = logistic(intercept + Σ coefficient × feature, the prior market price included)
 ```
 
@@ -1500,6 +1511,33 @@ The error counts only lots matched to a Cricsheet player: 7 of 180 sold lots in 
 77 in 2026 (9.5 cr, Mangesh Yadav 5.2 of it) have no ball-by-ball record and aren't scored. Unsold
 players aren't scored either (P(bought) is scored on its own). The paired bootstrap of any two recipes on
 the same lots is `test_honest.paired` (`fit --ref`).
+
+**The upper quartile for the recently dear (2026-11-01, declared before its numbers).** A fresh review
+read the table above as "stars come out at 0.36× their price" and asked why Keep or release then calls
+Cameron Green or Yuzvendra Chahal not worth their cost. Grouping lots by what they sold for picks the
+lots the model didn't foresee, so a dear outcome looks under-priced even for a perfect model. The fair
+question groups by what was known before the auction: his **last market verdict** (last auction price or
+mega retention, as a share of the purse, at this purse). The test and rule were written down first: every
+lot 2019–2026 priced out of time (the shipped recipe fitted on the auctions before it, the resale rule
+refitted without that auction); if the players whose last verdict was 10 cr or more sell above the general
+upper quartile more than 35% of the time, with a 90% interval clear of 25%, they get their own upper
+quartile, the median × e^q75 of their own out-of-time ln(real ÷ median), shipped only with 30+ lots and a
+leave-one-auction-out share above it of 18–32%; otherwise "Should they?" could not say No for them.
+
+| lots 2019–2026, out of time | n | sold above the general upper quartile | 90% interval |
+|---|---|---|---|
+| last verdict 10 cr+ ("recently dear") | 55 | **36%** | 27–47% |
+| everyone else | 702 | 21% | 18–23% |
+
+The general upper quartile is too low for them: their prices are spread wider (Green 25.2 against a
+median of 10.7, Pathirana 18 against 9.1; and the other way, Sam Curran 2.4 against 6.7, Washington
+Sundar 3.2 against 11.3). Their own upper quartile, the median × e^0.80 ≈ 2.2, is beaten **24%** of the
+time leaving one auction out (90% interval 15–33%), so it ships (`price.star_upper` in
+`config/price_model.json`, written by `scripts/ipl_price_model.py star-upper`; `pricing.market_price` ⇄
+`marketPrice`, parity-tested). Only the upper quartile changes, as declared; their median still runs low
+(real prices a median e^0.23 ≈ 1.26× it), which no tested recipe has fixed. In Keep or release three
+calls move from No to Close (Samson, Hetmyer, Arshdeep Singh); Green, Chahal, Jurel, Parag and Rohit Sharma
+stay No, now on a range that holds for players like them.
 
 **The value a price uses is not always the value shown.** The price recipe is fitted on
 its own value input, `price_value`: the legacy blend (one discount per league, the 300-ball switch) moved
@@ -2840,6 +2878,24 @@ were read on these deadlines):
 | 2025 mega | 252 (18%) | 0.841 | 0.817 release all | +0.024 (−0.004, +0.055) | 0.307 (0.494) | −0.187 (−0.223, −0.149) | 0.85 / 0.98 | 0.82 |
 | 2026 mini | 229 (69%) | 0.707 | 0.686 keep all | +0.022 (−0.039, +0.091) | 0.509 (0.625) | −0.116 (−0.174, −0.064) | 0.53 / 0.61 | 0.88 |
 
+**Beside two plain rules** (added 2026-11-01 after a fresh review; the rules were declared before their
+numbers, are reported whatever they show and never choose or change the model; `keep_backtest.py
+baselines` → `evaluation.baselines` in `config/keep_model.json`). "7 matches" = keep anyone who played 7+
+IPL matches last season (half a season); a variant asking 10+ of overseas players scored the same.
+
+| deadline | | L8 | keep / release everyone | 7 matches |
+|---|---|---|---|---|
+| 2026 mini | all (229) | **0.707** | 0.686 | 0.677 |
+| | stars (50, 46 kept) | 0.88 | **0.92** | 0.84 |
+| | releases: precision / recall | 0.53 / 0.61 | – | 0.49 / 0.78 |
+| 2025 mega | all (252) | **0.841** | 0.817 | 0.738 |
+| | stars (171) | **0.82** | 0.79 | 0.67 |
+
+So the yes / no call is level with the right "everyone" rule and a little ahead of the 7-match rule; on
+2026's stars keeping all of them beat the model (it found none of the four who went). The model's worth is
+the chance (log loss) and the ranking within a squad, not the hit rate; the report and the Keep page say so
+next to every accuracy figure.
+
 The rule before 2026-10-22 (C0) scores 0.813 and 0.616 (7 points *below* keeping everyone in 2026). So:
 the chance is much better than a flat rate in both kinds of year, and the model ranks who stays within a
 squad; **in a mini year its keep / release calls are level with keeping everyone** (the interval spans
@@ -2953,7 +3009,7 @@ Read honestly:
   59%, Toss-up, kept by default). No special rule.
 
 <!-- keep-example:start -->
-*Worked example (IPL 2027 defaults, data to the 2026 final).* RCB's Virat Kohli: value +3.8 for the coming season (career +13.6), 38 at the auction, 16 IPL matches last season; market price 7.84 cr (13.69 in the top quarter). A 2025 retention, so keeping him costs what releasing him alone would free under the slab rule: 15 cr, against a 21 cr salary. His price is under his cost; he is home-grown and has played 19 seasons for RCB, and the forecast gives him a 55% chance of being a regular in its third season: franchises kept **97%** of players like him, so **Keep**.
+*Worked example (IPL 2027 defaults, data to the 2026 final).* RCB's Virat Kohli: value +3.8 for the coming season (career +13.6), 38 at the auction, 16 IPL matches last season; market price 7.84 cr (18.05 in the top quarter). A 2025 retention, so keeping him costs what releasing him alone would free under the slab rule: 15 cr, against a 21 cr salary. His price is under his cost; he is home-grown and has played 19 seasons for RCB, and the forecast gives him a 55% chance of being a regular in its third season: franchises kept **97%** of players like him, so **Keep**.
 <!-- keep-example:end -->
 
 **The reality table: 25 marquee players** (2027 defaults; market median / upper quartile, cr; cost = what
@@ -2962,31 +3018,31 @@ keeping him takes from the purse; P = the chance a franchise keeps a player like
 <!-- keep-reality:start -->
 | player | team | salary | cost | market | P | call | what the franchise did |
 |---|---|---|---|---|---|---|---|
-| Virat Kohli | RCB | 21 | 15 (slab) | 7.84 / 13.69 | 97% | Keep | Retained 2025 (21 cr), kept for 2026 |
-| Rohit Sharma | MI | 16.3 | 14 (slab) | 4.98 / 9.36 | 68% | Keep | Retained 2025, kept for 2026 |
-| Suryakumar Yadav | MI | 16.35 | 14 (slab) | 9.17 / 15.65 | 96% | Keep | Retained 2025, kept for 2026 |
-| Jasprit Bumrah | MI | 18 | 14 (slab) | 13.42 / 21.22 | 99% | Keep | Retained 2025, kept for 2026 |
-| Shubman Gill | GT | 16.5 | 11 (slab) | 23.09 / 33.22 | 100% | Keep | Retained 2025, kept for 2026 (captain) |
-| Rishabh Pant | DC | 15 | 15 | 17.61 / 27.1 | 98% | Keep | Bought 27 by LSG (2025); traded back to DC at 15 (June 2026) |
-| Ravindra Jadeja | RR | 14 | 14 | 8.68 / 14.82 | 91% | Keep | Retained by CSK 2025; traded to RR for 2026 |
+| Virat Kohli | RCB | 21 | 15 (slab) | 7.84 / 18.05 | 97% | Keep | Retained 2025 (21 cr), kept for 2026 |
+| Rohit Sharma | MI | 16.3 | 14 (slab) | 4.98 / 11.53 | 68% | Keep | Retained 2025, kept for 2026 |
+| Suryakumar Yadav | MI | 16.35 | 14 (slab) | 9.17 / 21.41 | 96% | Keep | Retained 2025, kept for 2026 |
+| Jasprit Bumrah | MI | 18 | 14 (slab) | 13.42 / 30.78 | 99% | Keep | Retained 2025, kept for 2026 |
+| Shubman Gill | GT | 16.5 | 11 (slab) | 23.09 / 52.98 | 100% | Keep | Retained 2025, kept for 2026 (captain) |
+| Rishabh Pant | DC | 15 | 15 | 17.61 / 40.71 | 98% | Keep | Bought 27 by LSG (2025); traded back to DC at 15 (June 2026) |
+| Ravindra Jadeja | RR | 14 | 14 | 8.68 / 19.98 | 91% | Keep | Retained by CSK 2025; traded to RR for 2026 |
 | MS Dhoni | CSK | 4 | 4 | 0.78 / 1.93 | 48% | Toss-up (released) | Retained 2025 (uncapped, 4 cr), kept for 2026; did not play in 2026 |
-| Rinku Singh | KKR | 13 | 11 (slab) | 6.54 / 11.89 | 96% | Keep | Retained 2025, kept for 2026 |
+| Rinku Singh | KKR | 13 | 11 (slab) | 6.54 / 15.51 | 96% | Keep | Retained 2025, kept for 2026 |
 | Tejasvi Singh | KKR | 3 | 3 | 0.65 / 1.76 | 47% | Toss-up (released) | Bought 3 cr at the 2026 auction; 15 IPL balls |
-| Hardik Pandya | MI | 16.35 | 14 (slab) | 13.56 / 21.63 | 89% | Keep | Retained 2025, kept for 2026 (captain) |
+| Hardik Pandya | MI | 16.35 | 14 (slab) | 13.56 / 31.61 | 89% | Keep | Retained 2025, kept for 2026 (captain) |
 | Tilak Varma | MI | 8 | 8 | 11.86 / 19 | 99% | Keep | Retained 2025, kept for 2026 |
-| Abhishek Sharma | SRH | 14 | 14 | 17.22 / 26.59 | 100% | Keep | Retained 2025, kept for 2026 |
-| Yashasvi Jaiswal | RR | 18 | 18 | 12.74 / 20.9 | 99% | Keep | Retained 2025, kept for 2026 |
-| Shreyas Iyer | PBKS | 26.75 | 26.75 | 17.53 / 26.98 | 96% | Keep | Bought 26.75 (2025), kept for 2026 (captain) |
-| KL Rahul | DC | 14 | 14 | 10.05 / 16.68 | 96% | Keep | Bought 14 (2025), kept for 2026 |
-| Axar Patel | DC | 16.5 | 14 (slab) | 18.9 / 28.06 | 98% | Keep | Retained 2025, kept for 2026 (captain) |
-| Sanju Samson | CSK | 18 | 18 | 9.13 / 15.66 | 94% | Keep | Retained by RR 2025; traded to CSK for 2026 |
-| Ruturaj Gaikwad | CSK | 18 | 14 (slab) | 10.18 / 17.24 | 98% | Keep | Retained 2025, kept for 2026 (captain) |
-| Rashid Khan | GT | 18 | 11 (slab) | 12.5 / 19.93 | 98% | Keep | Retained 2025, kept for 2026 |
-| Pat Cummins | SRH | 18 | 14 (slab) | 13.12 / 20.82 | 75% | Keep | Retained 2025, kept for 2026 (captain) |
-| Heinrich Klaasen | SRH | 23 | 14 (slab) | 10.66 / 17.94 | 95% | Keep | Retained 2025 (23 cr), kept for 2026 |
-| Cameron Green | KKR | 25.2 | 25.2 | 9.21 / 15.91 | 88% | Keep | Bought 25.2 at the 2026 auction (paid 18) |
+| Abhishek Sharma | SRH | 14 | 14 | 17.22 / 40.77 | 100% | Keep | Retained 2025, kept for 2026 |
+| Yashasvi Jaiswal | RR | 18 | 18 | 12.74 / 30.22 | 99% | Keep | Retained 2025, kept for 2026 |
+| Shreyas Iyer | PBKS | 26.75 | 26.75 | 17.53 / 40.51 | 96% | Keep | Bought 26.75 (2025), kept for 2026 (captain) |
+| KL Rahul | DC | 14 | 14 | 10.05 / 23.28 | 96% | Keep | Bought 14 (2025), kept for 2026 |
+| Axar Patel | DC | 16.5 | 14 (slab) | 18.9 / 43.23 | 98% | Keep | Retained 2025, kept for 2026 (captain) |
+| Sanju Samson | CSK | 18 | 18 | 9.13 / 21.34 | 94% | Keep | Retained by RR 2025; traded to CSK for 2026 |
+| Ruturaj Gaikwad | CSK | 18 | 14 (slab) | 10.18 / 23.97 | 98% | Keep | Retained 2025, kept for 2026 (captain) |
+| Rashid Khan | GT | 18 | 11 (slab) | 12.5 / 28.54 | 98% | Keep | Retained 2025, kept for 2026 |
+| Pat Cummins | SRH | 18 | 14 (slab) | 13.12 / 30.07 | 75% | Keep | Retained 2025, kept for 2026 (captain) |
+| Heinrich Klaasen | SRH | 23 | 14 (slab) | 10.66 / 24.91 | 95% | Keep | Retained 2025 (23 cr), kept for 2026 |
+| Cameron Green | KKR | 25.2 | 25.2 | 9.21 / 21.71 | 88% | Keep | Bought 25.2 at the 2026 auction (paid 18) |
 | Vaibhav Suryavanshi | RR | 1.1 | 1.1 | 9.92 / 14.77 | 100% | Keep | Bought 1.1 (2025), kept for 2026 |
-| Arshdeep Singh | PBKS | 18 | 18 | 10.75 / 17.86 | 94% | Keep | Bought back 18 with an RTM (2025), kept for 2026 |
+| Arshdeep Singh | PBKS | 18 | 18 | 10.75 / 25.03 | 94% | Keep | Bought back 18 with an RTM (2025), kept for 2026 |
 
 23 of the 25 are kept by default: not kept, MS Dhoni (48%, 0 IPL matches last season); Tejasvi Singh (47%, 2 IPL matches last season).
 <!-- keep-reality:end -->

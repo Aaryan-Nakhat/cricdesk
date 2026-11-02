@@ -1053,5 +1053,61 @@ def _forecast_market(work: Path, data: dict, letter: str | None) -> dict:
     return out
 
 
+# simple rules beside the model, declared 2026-11-01 before their numbers (METHODOLOGY §10): reported
+# whatever they show, never used to choose or change the model
+BASELINES = {
+    "played_7": "keep if he played 7+ IPL matches last season (half a season), else release",
+    "played_7_os10": "the same, but an overseas player needs 10+ matches",
+}
+
+
+def _baseline_call(name: str, r: dict) -> bool:
+    ml = r.get("matches_last") or 0
+    if name == "played_7":
+        return ml >= 7
+    return ml >= (10 if r.get("overseas") else 7)
+
+
+@app.command()
+def baselines(
+    work: Path = typer.Option(..., "--work"),
+    model_out: Path = typer.Option(MODEL_OUT, "--model-out"),
+) -> None:
+    """Score the declared simple rules and "keep / release everyone" on the validation deadlines (2025,
+    2026), overall and for stars, and write them beside the model's validation in keep_model.json."""
+    rows_f = work / f"rows_{_rows_key()}.pkl"
+    if not rows_f.exists():
+        raise typer.BadParameter(f"no {rows_f.name}: run `rows` first")
+    data: dict = pickle.loads(rows_f.read_bytes())
+    ipm.AUCTIONS_DATES.update(ipm.auction_dates())
+    _playing_time(data)
+    _mega_retained(data)
+    mk = _market(work, data, None)
+    for s, rows in data.items():
+        for r in rows:
+            r["market"], r["market_central"] = mk[(s, r["team"], r["cricsheet_id"])]
+        _costs(rows, s)
+    out: dict = {"declared": "2026-11-01", "rules": BASELINES}
+    for s in TEST:
+        rows = data[s]
+        mega = rows[0]["cycle"] == "mega"
+        res = {}
+        rules = [("everyone", lambda r, keep=not mega: keep)] + [
+            (n, lambda r, n=n: _baseline_call(n, r)) for n in BASELINES
+        ]
+        for name, fn in rules:
+            pred = [bool(fn(r)) for r in rows]
+            if mega:  # a mega deadline's retention limits bind any rule, as they bind the model
+                pred = _apply_caps(rows, pred, [1.0 if x else 0.0 for x in pred])
+            rep = _report(rows, pred)
+            res[name] = {t: {k: rep[t][k] for k in ("n", "accuracy", "release_precision",
+                                                     "release_recall")} for t in ("all", "star")}  # fmt: skip
+        out[str(s)] = res
+    model = json.loads(model_out.read_text(encoding="utf-8"))
+    model.setdefault("evaluation", {})["baselines"] = out
+    model_out.write_text(json.dumps(model, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    typer.echo(json.dumps(out, indent=1))
+
+
 if __name__ == "__main__":
     app()

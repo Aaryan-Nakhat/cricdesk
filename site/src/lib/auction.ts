@@ -180,6 +180,8 @@ export interface PriceModel {
       e_retained?: number;
       f_last_years?: number;
     };
+    /** recently dear (last verdict >= last_cr cr): upper quartile = median × e^q75_ln (pricing.market_price) */
+    star_upper?: { last_cr: number; q75_ln: number } | null;
   };
   bought: PriceModelPart;
   [k: string]: unknown;
@@ -399,6 +401,10 @@ export function marketPrice(
     // floored price instead it fell below the price for a player the model puts under the floor
     hi = adj + (hi - lin);
   }
+  // recently dear: last market verdict last_cr cr or more, upper quartile from that group's own
+  // out-of-time spread (pricing.market_price, METHODOLOGY §6b)
+  const su = m.price.star_upper;
+  if (su && ps !== null && ps * c.purse >= su.last_cr) hi = Math.log(price / c.purse) + su.q75_ln;
   const high = Math.max(m.floor_cr, c.purse * Math.exp(hi));
   // the bought part was fitted inside its risk window: a longer absence reads as the window's edge
   const gm = (m.bought as { gap_max?: number }).gap_max;

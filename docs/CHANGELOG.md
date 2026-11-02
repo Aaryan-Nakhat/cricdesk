@@ -8,6 +8,22 @@ versioning starts at v0.1.0.
 
 ## [Unreleased]
 
+### Star prices and honest baselines (2026-11-01)
+
+A fresh six-lens review found two serious problems; each fix was declared before its numbers.
+
+- **Upper quartile for the recently dear.** Players whose last market verdict was 10 cr+ sold above the
+  general upper quartile 36% of the time out of time (55 lots, 2019-2026; 90% interval 27-47%), not 25%.
+  They now get their own upper quartile (the median × e^0.80), beaten 24% of the time leaving one auction
+  out (`price.star_upper`, `ipl_price_model.py star-upper`, Python ⇄ TS parity). In Keep or release Samson,
+  Hetmyer and Arshdeep Singh move from Should they? No to Close. METHODOLOGY §6b.
+- **Keep accuracy beside plain rules.** Every accuracy figure now sits next to "keep / release everyone"
+  and "keep anyone who played 7+ matches last season" (`keep_backtest.py baselines`, declared first, never
+  used to choose the model). 2026: model 71%, everyone 69%, 7 matches 68%; stars: model 88%, keeping every
+  star 92%. Keep page, About, README, METHODOLOGY §10.
+- METHODOLOGY §4c notes three flagged numbers (Kohli's rank, Rahul Singh's price input, thin records) and
+  why they stand.
+
 ### Renamed to CricDesk (2026-10-31)
 
 The earlier name was already used by an unrelated cricket product (a card-battling Discord bot) and was

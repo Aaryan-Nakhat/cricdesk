@@ -78,7 +78,8 @@ player costs (his salary, or for a 2025 mega-auction retention the 2025 retentio
 a model of every real retention deadline since 2018 (price against cost, his three-season form forecast, his
 ties to the side, his status, his IPL matches last season). Chosen on 2018–2024 and checked once on 2025–26:
 at the 2026 deadline (a mini year, like 2027) it made the franchise's own call for 71% of players, level with
-simply keeping everyone (69%) and ahead of the old price-against-salary rule (62%); its gain is the chance
+simply keeping everyone (69%) and a little ahead of keeping anyone who played 7+ matches last season (68%); on
+the stars, keeping all of them did better (92% against 88%). Its gain is the chance
 itself and finding who goes (61% of 2026's releases named). The 2027 calls are written down before the deadline
 ([`data/predictions/`](data/predictions/)), the first clean test. Franchises hardly weigh
 the cost in a mini year, so a second column, **Should they?**, asks whether he is worth what keeping him costs:

@@ -224,6 +224,11 @@
    "e_retained": 0.004269,
    "f_last_years": 0.0,
    "rows": 368
+  },
+  "star_upper": {
+   "last_cr": 10.0,
+   "q75_ln": 0.8036,
+   "rows": 55
   }
  },
  "bought": {
@@ -935,6 +940,39 @@
      ]
     }
    }
+  },
+  "star_upper": {
+   "declared": "2026-11-01",
+   "last_cr": 10.0,
+   "general_upper": {
+    "recently_dear": {
+     "n": 55,
+     "share": 0.3636,
+     "ci90": [
+      0.2727,
+      0.4727
+     ]
+    },
+    "others": {
+     "n": 702,
+     "share": 0.208,
+     "ci90": [
+      0.1838,
+      0.2322
+     ]
+    }
+   },
+   "needed": true,
+   "c2_loao": {
+    "n": 55,
+    "share": 0.2364,
+    "ci90": [
+     0.1455,
+     0.3273
+    ]
+   },
+   "q75_ln_all": 0.8036,
+   "ships": true
   }
  }
 }

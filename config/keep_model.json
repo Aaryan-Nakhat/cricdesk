@@ -256,6 +256,101 @@
      }
     }
    }
+  },
+  "baselines": {
+   "declared": "2026-11-01",
+   "rules": {
+    "played_7": "keep if he played 7+ IPL matches last season (half a season), else release",
+    "played_7_os10": "the same, but an overseas player needs 10+ matches"
+   },
+   "2025": {
+    "everyone": {
+     "all": {
+      "n": 252,
+      "accuracy": 0.817,
+      "release_precision": 0.817,
+      "release_recall": 1.0
+     },
+     "star": {
+      "n": 171,
+      "accuracy": 0.789,
+      "release_precision": 0.789,
+      "release_recall": 1.0
+     }
+    },
+    "played_7": {
+     "all": {
+      "n": 252,
+      "accuracy": 0.738,
+      "release_precision": 0.865,
+      "release_recall": 0.806
+     },
+     "star": {
+      "n": 171,
+      "accuracy": 0.673,
+      "release_precision": 0.826,
+      "release_recall": 0.741
+     }
+    },
+    "played_7_os10": {
+     "all": {
+      "n": 252,
+      "accuracy": 0.738,
+      "release_precision": 0.865,
+      "release_recall": 0.806
+     },
+     "star": {
+      "n": 171,
+      "accuracy": 0.673,
+      "release_precision": 0.826,
+      "release_recall": 0.741
+     }
+    }
+   },
+   "2026": {
+    "everyone": {
+     "all": {
+      "n": 229,
+      "accuracy": 0.686,
+      "release_precision": 0.0,
+      "release_recall": 0.0
+     },
+     "star": {
+      "n": 50,
+      "accuracy": 0.92,
+      "release_precision": 0.0,
+      "release_recall": 0.0
+     }
+    },
+    "played_7": {
+     "all": {
+      "n": 229,
+      "accuracy": 0.677,
+      "release_precision": 0.491,
+      "release_recall": 0.778
+     },
+     "star": {
+      "n": 50,
+      "accuracy": 0.84,
+      "release_precision": 0.0,
+      "release_recall": 0.0
+     }
+    },
+    "played_7_os10": {
+     "all": {
+      "n": 229,
+      "accuracy": 0.677,
+      "release_precision": 0.491,
+      "release_recall": 0.778
+     },
+     "star": {
+      "n": 50,
+      "accuracy": 0.84,
+      "release_precision": 0.0,
+      "release_recall": 0.0
+     }
+    }
+   }
   }
  }
 }

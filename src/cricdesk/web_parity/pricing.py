@@ -360,6 +360,14 @@ def market_price(
         # the upper quartile keeps its gap above the model's own (unfloored) median: measured from the
         # floored price instead it fell below the price for a player the model puts under the floor
         hi = adj + (hi - lin)
+    # recently dear: a player whose last market verdict was `star_upper.last_cr` cr or more (his last
+    # auction price or mega retention, as a share of the purse, at this purse) sells above the general
+    # upper quartile about 36% of the time out of time, not 25%; his upper quartile is the median times
+    # e^q75, q75 the 75th percentile of that group's out-of-time ln(real / median) (scripts/
+    # ipl_price_model.py star-upper; METHODOLOGY §6b, declared 2026-11-01)
+    su = model["price"].get("star_upper")
+    if su and ps is not None and ps * float(comp["purse"]) >= float(su["last_cr"]):
+        hi = math.log(price / float(comp["purse"])) + float(su["q75_ln"])
     high = max(floor, float(comp["purse"]) * math.exp(hi))
     p = None
     if f["never_ipl"] == 0.0:

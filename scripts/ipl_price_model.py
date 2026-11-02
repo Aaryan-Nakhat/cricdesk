@@ -1991,6 +1991,108 @@ def resale(model_path: Path = typer.Option(MODEL_PATH, "--model")) -> None:
     logger.info(f"wrote {model_path}")
 
 
+STAR_UPPER_CR = 10.0  # "recently dear": last market verdict at least this, at the auction's purse
+
+
+def _star_upper_lots(price_rows: list[dict], ret_rows: list[dict], model: dict) -> list[dict]:
+    """Every lot 2019-2026 priced out of time with the shipped recipe (fitted on the auctions before
+    it) and its resale rule refitted without that auction, with his last market verdict in cr."""
+    import copy
+
+    rs = model["price"].get("resale") or {}
+    w, kind = int(rs.get("max_years", 1)), rs.get("rule", "R2")
+    spec = shipped_spec(model)
+    parts, pre = {}, []
+    for s in range(2019, 2027):
+        a = next(r for r in price_rows if r["season"] == s)
+        comp = {"cycle": a["cycle"], "purse": float(a["purse"])}
+        part = fit_price_part(price_rows, ret_rows, spec, 2018 if s > 2019 else 2011, s)
+        part.pop("resale", None)
+        part.pop("star_upper", None)
+        parts[s] = (comp, part)
+        mdl = {"floor_cr": 0.2 if s < 2025 else 0.3, "competition": comp, "price": part,
+               "bought": model.get("bought")}  # fmt: skip
+        for r in price_rows:
+            if r["season"] == s:
+                pre.append({"row": r, "season": s, "purse": float(r["purse"]),
+                            "price_cr": r["price_cr"], "prior_share": r.get("prior_share"),
+                            "prior_years": r.get("prior_years"),
+                            "prior_retained": r.get("prior_retained"),
+                            "pred": pricing.market_price(_valued(r), comp, mdl)["price"]})  # fmt: skip
+    out = []
+    for s in range(2019, 2027):
+        comp, part = parts[s]
+        train = [x for x in pre if x["season"] != s and x["prior_share"]
+                 and x["prior_years"] is not None and x["prior_years"] <= w]  # fmt: skip
+        p2 = copy.deepcopy(part)
+        if rs and train:
+            p2["resale"] = {"rule": kind, "max_years": w, **resale_coefs(_resale_fit(train, kind))}
+        mdl = {"floor_cr": 0.2 if s < 2025 else 0.3, "competition": comp, "price": p2,
+               "bought": model.get("bought")}  # fmt: skip
+        for x in pre:
+            if x["season"] == s:
+                mk = pricing.market_price(_valued(x["row"]), comp, mdl)
+                out.append({"name": x["row"].get("name"), "season": s, "real": x["price_cr"],
+                            "med": mk["price"], "high": mk["high"],
+                            "last_cr": (x["prior_share"] or 0.0) * x["purse"]})  # fmt: skip
+    return out
+
+
+def _share_above(rows: list[dict], key: str = "high") -> dict:
+    """Share of lots sold above `key`, with a 90% bootstrap interval (lots resampled within auction)."""
+    above = np.array([r["real"] > r[key] for r in rows], float)
+    by = {
+        s: [i for i, r in enumerate(rows) if r["season"] == s] for s in {r["season"] for r in rows}
+    }
+    rng = np.random.default_rng(42)
+    boots = [above[np.concatenate([rng.choice(v, len(v)) for v in by.values()])].mean()
+             for _ in range(4000)]  # fmt: skip
+    return {"n": len(rows), "share": round(float(above.mean()), 4),
+            "ci90": [round(float(np.percentile(boots, 5)), 4), round(float(np.percentile(boots, 95)), 4)]}  # fmt: skip
+
+
+@app.command("star-upper")
+def star_upper(model_path: Path = typer.Option(MODEL_PATH, "--model")) -> None:
+    """The upper quartile for the recently dear (last market verdict >= 10 cr), under the rule
+    declared 2026-11-01 (METHODOLOGY §6b): if they sell above the general upper quartile more than
+    35% of the time out of time with a 90% interval clear of 25%, their upper quartile becomes the
+    median × e^q75 of their own out-of-time ln(real / median), shipped only with >= 30 lots and a
+    leave-one-auction-out share above it of 18-32%."""
+    AUCTIONS_DATES.update(auction_dates())
+    model = json.loads(model_path.read_text(encoding="utf-8"))
+    price_rows, _risk, _hist, ret_rows = build_rows()
+    pricing.load_price_model.cache_clear()
+    lots = _star_upper_lots(price_rows, ret_rows, model)
+    star = [r for r in lots if r["last_cr"] >= STAR_UPPER_CR]
+    rest = [r for r in lots if r["last_cr"] < STAR_UPPER_CR]
+    general = {"recently_dear": _share_above(star), "others": _share_above(rest)}
+    lr = {r["season"]: [] for r in star}
+    for r in star:
+        lr[r["season"]].append(r)
+    held = []
+    for s in lr:
+        q = float(
+            np.percentile([math.log(r["real"] / r["med"]) for r in star if r["season"] != s], 75)
+        )
+        held += [{**r, "c2": r["med"] * math.exp(q)} for r in lr[s]]
+    c2 = _share_above(held, "c2")
+    g = general["recently_dear"]
+    needed = g["share"] > 0.35 and g["ci90"][0] > 0.25
+    ships = needed and len(star) >= 30 and 0.18 <= c2["share"] <= 0.32
+    q_all = float(np.percentile([math.log(r["real"] / r["med"]) for r in star], 75))
+    ev = {"declared": "2026-11-01", "last_cr": STAR_UPPER_CR, "general_upper": general,
+          "needed": needed, "c2_loao": c2, "q75_ln_all": round(q_all, 4), "ships": ships}  # fmt: skip
+    logger.info(json.dumps(ev, indent=1))
+    model["price"].pop("star_upper", None)
+    if ships:
+        model["price"]["star_upper"] = {"last_cr": STAR_UPPER_CR, "q75_ln": round(q_all, 4),
+                                        "rows": len(star)}  # fmt: skip
+    model.setdefault("evaluation", {})["star_upper"] = ev
+    model_path.write_text(json.dumps(model, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    pricing.load_price_model.cache_clear()
+    logger.info(f"wrote {model_path}")
+
+
 def _next_competition() -> dict:
     from cricdesk import competitions
 
