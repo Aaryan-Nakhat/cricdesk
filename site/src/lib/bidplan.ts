@@ -449,7 +449,8 @@ export function openPlaces(players: AssessedPlayer[], limit: number): void {
   if (extra <= 0) return;
   // the kept player franchises are least likely to keep goes first (Keep or release's P(keep); one
   // without it first): bidplan.py `open_places`
-  const key = (p: AssessedPlayer): [number, number] => [p.p_keep === null || p.p_keep === undefined ? 0 : 1, p.p_keep ?? 0];
+  // a player traded in is kept, not predicted: he goes last (bidplan.py `open_places`)
+  const key = (p: AssessedPlayer): [number, number] => [p.traded_in ? 2 : p.p_keep === null || p.p_keep === undefined ? 0 : 1, p.p_keep ?? 0];
   const movable = kept
     .filter((p) => !p.overridden)
     .sort((a, b) => {

@@ -13,7 +13,7 @@ import { AUTHOR, AUTHOR_URL, cn, collectionLabel, fmt, prettyDate } from "@/lib/
 
 // The IPL 2027 retention deadline the hero leads with (as reported; config/competitions.toml
 // `retention_deadline`, also in keep.json, which the home page doesn't load).
-const DEADLINE = "2026-11-15";
+const DEADLINE = "2026-11-17";
 const DEADLINE_LABEL = new Date(`${DEADLINE}T00:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 
 export function Overview() {

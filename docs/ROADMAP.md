@@ -206,7 +206,7 @@ disagreements left for a human are in `data/curated/player_master_review.json`.
 
 Effort: S = up to 2 days, M = 3–7 days, L = 2+ weeks.
 
-**Tier A: before the IPL 2027 retention deadline (reported 15 Nov 2026)**
+**Tier A: before the IPL 2027 retention deadline (reported 17 Nov 2026, moved from 15 Nov)**
 - [x] 1. Ingest correctness sprint (S–M): the zip names, `sma_json.zip`, DLS method and target, all extras,
   both wickets, `season`, `event.stage`, `players`, `replacements`, `review`, `powerplays`,
   `non_boundary`.
@@ -455,7 +455,7 @@ All to fix. Order: data fixes and price model first, then Bid plan, then visuals
 - [ ] I5. IPL 2027 purse and auction date are assumptions — confirm from official / press sources.
   *Checked 2026-10-22: no 2027 purse published anywhere (only the 157 cr salary cap); the auction is still
   "reported" for 16 Dec, ITC Grand Goa; retention lists due 15 Nov. Both stay `assumed` with dated sources in
-  `config/competitions.toml`. Re-check when the retention lists and remaining purses come out (15 Nov).*
+  `config/competitions.toml`. Re-check when the retention lists and remaining purses come out (17 Nov).*
   *Rules re-checked 2026-10-22: 2027 is the last mini auction of the 2025–27 cycle (keep anyone at his
   contract, no RTM); the overseas fee cap limits the fee, not the bid; the 2025 retention slabs are assumed
   to carry into 2027 (owner's call), charged as in 2026 (rule reproduces all 20 published 2025–26 purses).*

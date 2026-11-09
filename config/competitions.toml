@@ -49,7 +49,7 @@ cycle = "mini"
 currency = "INR"
 unit = "cr"
 squads = "curated/ipl_squads_2026.json"
-retention_deadline = "2026-11-15"
+retention_deadline = "2026-11-17"
 auction_date = "2026-12-16"
 auction_venue = "Goa, India"
 # No 2027 purse has been published. 125 cr is the 2026 purse, kept until one is announced. (The
@@ -89,6 +89,14 @@ assumed = [
 [[competition.source]]
 about = "retention_deadline"
 status = "reported"
+title = "BCCI extends IPL 2027 retention deadline to November 17 due to India-NZ fifth ODI clash"
+url = "https://www.ap7am.com/en/138678/bcci-extends-ipl-2027-retention-deadline-to-november-17-due-to-india-nz-fifth-odi-clash"
+date = "2026-11-02"
+note = "Moved from 15 Nov (the reports below); also Devdiscourse, Free Press Journal, NewsBytes, early Nov 2026. Checked 2026-11-09: no iplt20.com notice found."
+
+[[competition.source]]
+about = "retention_deadline"
+status = "reported"
 title = "T Natarajan returns to SRH, Zeeshan Ansari joins Delhi Capitals (IPL 2027 trade): 'before the IPL retention deadline expires on November 15'"
 url = "https://www.espn.com/soccer/cricket/story/_/id/50181002/t-natarajan-returns-srh-zeeshan-ansari-joins-delhi-capitals-ipl-2027-trade"
 date = "2026-10-14"
@@ -124,7 +132,7 @@ status = "reported"
 title = "IPL 2027 auction purse: searched 2026-10-22, nothing published (Sporting News via Yahoo Sports, 2026-10-18: 'total salary cap for 2027 is 157 crore'; 2026 'each team had a 125 crore limit')"
 url = "https://sports.yahoo.com/articles/ipl-auction-date-venue-rules-054708778.html"
 date = "2026-10-18"
-note = "Searched the press (ESPN, Business Standard, Business Today, Sporting News, Cricbuzz-sourced reports) and iplt20.com news on 2026-10-22: no 2027 auction purse announced. 125 cr kept as an assumption; replace when the retention lists (15 Nov) come with the remaining-purse table."
+note = "Searched the press (ESPN, Business Standard, Business Today, Sporting News, Cricbuzz-sourced reports) and iplt20.com news on 2026-10-22: no 2027 auction purse announced. 125 cr kept as an assumption; replace when the retention lists (17 Nov) come with the remaining-purse table."
 
 [[competition.source]]
 about = "auction_venue"

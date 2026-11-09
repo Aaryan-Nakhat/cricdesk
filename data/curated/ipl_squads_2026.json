@@ -81,7 +81,7 @@
   }
  ],
  "changes_since_season": {
-  "_source": "Wikipedia, 'List of 2027 Indian Premier League personnel changes' (CC BY-SA 4.0), revision 1381191916 of 2026-10-20T15:57:25Z: https://en.wikipedia.org/wiki/List_of_2027_Indian_Premier_League_personnel_changes",
+  "_source": "Wikipedia, 'List of 2027 Indian Premier League personnel changes' (CC BY-SA 4.0), revision 1383895615 of 2026-11-05T12:13:40Z: https://en.wikipedia.org/wiki/List_of_2027_Indian_Premier_League_personnel_changes",
   "applied": [
    {
     "from": "LSG",
@@ -122,6 +122,38 @@
     "name": "Ajinkya Rahane",
     "team": "KKR",
     "wiki_title": "Ajinkya Rahane"
+   },
+   {
+    "from": "SRH",
+    "kind": "trade",
+    "name": "Liam Livingstone",
+    "salary_cr": 6.0,
+    "to": "CSK",
+    "wiki_title": "Liam Livingstone"
+   },
+   {
+    "from": "CSK",
+    "kind": "trade",
+    "name": "Khaleel Ahmed",
+    "salary_cr": 4.8,
+    "to": "SRH",
+    "wiki_title": "Khaleel Ahmed"
+   },
+   {
+    "from": "CSK",
+    "kind": "trade",
+    "name": "Nathan Ellis",
+    "salary_cr": 2.0,
+    "to": "SRH",
+    "wiki_title": "Nathan Ellis"
+   },
+   {
+    "from": "SRH",
+    "kind": "trade",
+    "name": "Jack Edwards",
+    "salary_cr": 3.0,
+    "to": "CSK",
+    "wiki_title": "Jack Edwards"
    }
   ]
  },
@@ -348,17 +380,6 @@
    {
     "acquired": "retained",
     "country": "IND",
-    "cricsheet_id": "a2f46292",
-    "name": "Khaleel Ahmed",
-    "overseas": false,
-    "salary_cr": 4.8,
-    "status": "retained",
-    "wiki_title": "Khaleel Ahmed",
-    "withdrawn": true
-   },
-   {
-    "acquired": "retained",
-    "country": "IND",
     "cricsheet_id": "4a8a2e3b",
     "name": "MS Dhoni",
     "overseas": false,
@@ -395,17 +416,6 @@
     "salary_cr": 2.2,
     "status": "retained",
     "wiki_title": "Gurjapneet Singh"
-   },
-   {
-    "acquired": "retained",
-    "country": "AUS",
-    "cricsheet_id": "9eb1455b",
-    "name": "Nathan Ellis",
-    "overseas": true,
-    "salary_cr": 2.0,
-    "status": "retained",
-    "wiki_title": "Nathan Ellis",
-    "withdrawn": true
    },
    {
     "acquired": "retained",
@@ -598,14 +608,14 @@
     "acquired": "replacement",
     "country": "IND",
     "country_note": "set by hand: an Indian domestic player (no flag on the page, no country in the player master)",
+    "dob": "2001-09-23",
+    "dob_source": "https://www.espncricinfo.com/cricketers/macneil-noronha-1327725 (web search 2026-10-27)",
     "name": "Macneil Noronha",
     "overseas": false,
     "replaced": "Ramakrishna Ghosh",
     "salary_cr": 0.3,
     "status": "replacement",
-    "wiki_title": "Macneil Noronha",
-    "dob": "2001-09-23",
-    "dob_source": "https://www.espncricinfo.com/cricketers/macneil-noronha-1327725 (web search 2026-10-27)"
+    "wiki_title": "Macneil Noronha"
    },
    {
     "acquired": "replacement",
@@ -617,6 +627,35 @@
     "salary_cr": 0.75,
     "status": "replacement",
     "wiki_title": "Dian Forrester"
+   },
+   {
+    "acquired": "trade",
+    "country": "ENG",
+    "cricsheet_id": "50c6bc2b",
+    "name": "Liam Livingstone",
+    "overseas": true,
+    "salary_cr": 6.0,
+    "status": "bought",
+    "trade": {
+     "from": "SRH",
+     "salary_before_cr": 13.0
+    },
+    "wiki_title": "Liam Livingstone"
+   },
+   {
+    "acquired": "trade",
+    "country": "AUS",
+    "cricsheet_id": "f787e0eb",
+    "name": "Jack Edwards",
+    "overseas": true,
+    "salary_cr": 3.0,
+    "status": "bought",
+    "trade": {
+     "from": "SRH",
+     "salary_before_cr": 3.0
+    },
+    "wiki_title": "Jack Edwards (cricketer, born 2000)",
+    "withdrawn": true
    }
   ],
   "DC": [
@@ -1422,15 +1461,15 @@
     "acquired": "auction",
     "base_price_cr": 0.3,
     "country": "IND",
+    "dob": "2003-01-09",
+    "dob_source": "https://www.espncricinfo.com/cricketers/daksh-kamra-1515048 (web search 2026-10-27)",
     "name": "Daksh Kamra",
     "overseas": false,
     "role": "all_rounder",
     "role_note": "Wikipedia, 'List of 2026 Indian Premier League personnel changes' (CC BY-SA 4.0), revision 1375677829, sold-players table: role, 'Uncapped', base price 30 lakh",
     "salary_cr": 0.3,
     "status": "bought",
-    "wiki_title": "Daksh Kamra",
-    "dob": "2003-01-09",
-    "dob_source": "https://www.espncricinfo.com/cricketers/daksh-kamra-1515048 (web search 2026-10-27)"
+    "wiki_title": "Daksh Kamra"
    },
    {
     "acquired": "replacement",
@@ -1697,14 +1736,14 @@
     "acquired": "auction",
     "base_price_cr": 0.3,
     "country": "IND",
+    "dob": "2005-11-08",
+    "dob_source": "https://www.lucknowsupergiants.in/team/naman-tiwari-88633-profile (web search 2026-10-27)",
     "name": "Naman Tiwari",
     "overseas": false,
     "role_note": "Wikipedia 2026 personnel changes (rev 1375677829): bought by LSG for 1 cr at a 30 lakh base; no role given there",
     "salary_cr": 1.0,
     "status": "bought",
-    "wiki_title": "Naman Tiwari",
-    "dob": "2005-11-08",
-    "dob_source": "https://www.lucknowsupergiants.in/team/naman-tiwari-88633-profile (web search 2026-10-27)"
+    "wiki_title": "Naman Tiwari"
    },
    {
     "acquired": "auction",
@@ -2047,14 +2086,14 @@
     "acquired": "replacement",
     "country": "IND",
     "country_note": "set by hand: an Indian domestic player (no flag on the page, no country in the player master)",
+    "dob": "2000-10-28",
+    "dob_source": "https://www.iplt20.com/index.php/players/ruchit-ahir/33344 (web search 2026-10-27)",
     "name": "Ruchit Ahir",
     "overseas": false,
     "replaced": "Raj Angad Bawa",
     "salary_cr": 0.3,
     "status": "replacement",
-    "wiki_title": "Ruchit Ahir",
-    "dob": "2000-10-28",
-    "dob_source": "https://www.iplt20.com/index.php/players/ruchit-ahir/33344 (web search 2026-10-27)"
+    "wiki_title": "Ruchit Ahir"
    }
   ],
   "PBKS": [
@@ -2232,29 +2271,29 @@
     "acquired": "retained",
     "base_price_cr": 0.3,
     "country": "IND",
+    "dob": "2000-07-07",
+    "dob_source": "https://www.iplt20.com/players/pyla-avinash/22145 (web search 2026-10-27)",
     "name": "Pyla Avinash",
     "overseas": false,
     "role": "batter",
     "role_note": "Wikipedia, 'List of 2025 Indian Premier League personnel changes' (CC BY-SA 4.0), revision 1375677821, sold-players table: Batter, 'Uncapped', base price 30 lakh",
     "salary_cr": 0.3,
     "status": "retained",
-    "wiki_title": "Pyla Avinash",
-    "dob": "2000-07-07",
-    "dob_source": "https://www.iplt20.com/players/pyla-avinash/22145 (web search 2026-10-27)"
+    "wiki_title": "Pyla Avinash"
    },
    {
     "acquired": "retained",
     "base_price_cr": 0.3,
     "country": "IND",
+    "dob": "2003-01-30",
+    "dob_source": "https://www.espncricinfo.com/cricketers/harnoor-singh-1292496 (web search 2026-10-27)",
     "name": "Harnoor Pannu",
     "overseas": false,
     "role": "batter",
     "role_note": "Wikipedia, 'List of 2025 Indian Premier League personnel changes' (CC BY-SA 4.0), revision 1375677821, sold-players table (as 'Harnoor Singh', Punjab Kings, 30 lakh): Batter, 'Uncapped'",
     "salary_cr": 0.3,
     "status": "retained",
-    "wiki_title": "Harnoor Pannu",
-    "dob": "2003-01-30",
-    "dob_source": "https://www.espncricinfo.com/cricketers/harnoor-singh-1292496 (web search 2026-10-27)"
+    "wiki_title": "Harnoor Pannu"
    },
    {
     "acquired": "retained",
@@ -2310,15 +2349,15 @@
     "acquired": "auction",
     "base_price_cr": 0.3,
     "country": "IND",
+    "dob": "2005-04-01",
+    "dob_source": "https://www.espncricinfo.com/cricketers/vishal-nishad-1449053 (web search 2026-10-27)",
     "name": "Vishal Nishad",
     "overseas": false,
     "role": "all_rounder",
     "role_note": "Wikipedia, 'List of 2026 Indian Premier League personnel changes' (CC BY-SA 4.0), revision 1375677829, sold-players table: role, 'Uncapped', base price 30 lakh",
     "salary_cr": 0.3,
     "status": "bought",
-    "wiki_title": "Vishal Nishad",
-    "dob": "2005-04-01",
-    "dob_source": "https://www.espncricinfo.com/cricketers/vishal-nishad-1449053 (web search 2026-10-27)"
+    "wiki_title": "Vishal Nishad"
    }
   ],
   "RCB": [
@@ -2541,29 +2580,29 @@
     "acquired": "auction",
     "base_price_cr": 0.3,
     "country": "IND",
+    "dob": "2002-09-01",
+    "dob_source": "https://www.iplt20.com/players/vicky-ostwal/20624 (web search 2026-10-27)",
     "name": "Vicky Ostwal",
     "overseas": false,
     "role": "all_rounder",
     "role_note": "Wikipedia, 'List of 2026 Indian Premier League personnel changes' (CC BY-SA 4.0), revision 1375677829, sold-players table: role, 'Uncapped', base price 30 lakh",
     "salary_cr": 0.3,
     "status": "bought",
-    "wiki_title": "Vicky Ostwal",
-    "dob": "2002-09-01",
-    "dob_source": "https://www.iplt20.com/players/vicky-ostwal/20624 (web search 2026-10-27)"
+    "wiki_title": "Vicky Ostwal"
    },
    {
     "acquired": "auction",
     "base_price_cr": 0.3,
     "country": "IND",
+    "dob": "2002-10-10",
+    "dob_source": "https://www.wisden.com/players/mangesh-yadav-99932 (web search 2026-10-27)",
     "name": "Mangesh Yadav",
     "overseas": false,
     "role": "all_rounder",
     "role_note": "Wikipedia, 'List of 2026 Indian Premier League personnel changes' (CC BY-SA 4.0), revision 1375677829, sold-players table: role, 'Uncapped', base price 30 lakh",
     "salary_cr": 5.2,
     "status": "bought",
-    "wiki_title": "Mangesh Yadav",
-    "dob": "2002-10-10",
-    "dob_source": "https://www.wisden.com/players/mangesh-yadav-99932 (web search 2026-10-27)"
+    "wiki_title": "Mangesh Yadav"
    },
    {
     "acquired": "auction",
@@ -2581,15 +2620,15 @@
     "acquired": "auction",
     "base_price_cr": 0.3,
     "country": "IND",
+    "dob": "2006-09-26",
+    "dob_source": "https://www.cricketarchive.com/Archive/Players/2922/2922104/2922104.html (web search 2026-10-27)",
     "name": "Kanishk Chouhan",
     "overseas": false,
     "role": "all_rounder",
     "role_note": "Wikipedia, 'List of 2026 Indian Premier League personnel changes' (CC BY-SA 4.0), revision 1375677829, sold-players table: role, 'Uncapped', base price 30 lakh",
     "salary_cr": 0.3,
     "status": "bought",
-    "wiki_title": "Kanishk Chouhan",
-    "dob": "2006-09-26",
-    "dob_source": "https://www.cricketarchive.com/Archive/Players/2922/2922104/2922104.html (web search 2026-10-27)"
+    "wiki_title": "Kanishk Chouhan"
    },
    {
     "acquired": "replacement",
@@ -2829,15 +2868,15 @@
     "acquired": "auction",
     "base_price_cr": 0.3,
     "country": "IND",
+    "dob": "2004-06-02",
+    "dob_source": "https://www.espncricinfo.com/cricketers/aman-rao-1403261 (web search 2026-10-27)",
     "name": "Aman Rao",
     "overseas": false,
     "role": "batter",
     "role_note": "Wikipedia, 'List of 2026 Indian Premier League personnel changes' (CC BY-SA 4.0), revision 1375677829, sold-players table: role, 'Uncapped', base price 30 lakh",
     "salary_cr": 0.3,
     "status": "bought",
-    "wiki_title": "Aman Rao (cricketer, born 2004)",
-    "dob": "2004-06-02",
-    "dob_source": "https://www.espncricinfo.com/cricketers/aman-rao-1403261 (web search 2026-10-27)"
+    "wiki_title": "Aman Rao (cricketer, born 2004)"
    },
    {
     "acquired": "auction",
@@ -2875,14 +2914,14 @@
     "acquired": "replacement",
     "country": "IND",
     "country_note": "set by hand: an Indian domestic player (no flag on the page, no country in the player master)",
+    "dob": "2004-08-17",
+    "dob_source": "https://www.espncricinfo.com/cricketers/emanjot-singh-chahal-1454587 (web search 2026-10-27)",
     "name": "Emanjot Chahal",
     "overseas": false,
     "replaced": "Ravi Singh",
     "salary_cr": 0.3,
     "status": "replacement",
-    "wiki_title": "Emanjot Chahal",
-    "dob": "2004-08-17",
-    "dob_source": "https://www.espncricinfo.com/cricketers/emanjot-singh-chahal-1454587 (web search 2026-10-27)"
+    "wiki_title": "Emanjot Chahal"
    }
   ],
   "SRH": [
@@ -3030,16 +3069,6 @@
    },
    {
     "acquired": "auction",
-    "country": "ENG",
-    "cricsheet_id": "50c6bc2b",
-    "name": "Liam Livingstone",
-    "overseas": true,
-    "salary_cr": 13.0,
-    "status": "bought",
-    "wiki_title": "Liam Livingstone"
-   },
-   {
-    "acquired": "auction",
     "country": "IND",
     "cricsheet_id": "c38d3503",
     "name": "Shivam Mavi",
@@ -3083,15 +3112,15 @@
     "acquired": "auction",
     "base_price_cr": 0.3,
     "country": "IND",
+    "dob": "2002-08-22",
+    "dob_source": "https://www.wisden.com/players/onkar-tarmale-132820 (web search 2026-10-27)",
     "name": "Onkar Tarmale",
     "overseas": false,
     "role": "bowler",
     "role_note": "Wikipedia, 'List of 2026 Indian Premier League personnel changes' (CC BY-SA 4.0), revision 1375677829, sold-players table: role, 'Uncapped', base price 30 lakh",
     "salary_cr": 0.3,
     "status": "bought",
-    "wiki_title": "Onkar Tarmale",
-    "dob": "2002-08-22",
-    "dob_source": "https://www.wisden.com/players/onkar-tarmale-132820 (web search 2026-10-27)"
+    "wiki_title": "Onkar Tarmale"
    },
    {
     "acquired": "auction",
@@ -3119,26 +3148,15 @@
     "acquired": "auction",
     "base_price_cr": 0.3,
     "country": "IND",
+    "dob": "2004-06-19",
+    "dob_source": "https://www.espncricinfo.com/cricketers/krains-fuletra-1467631 (web search 2026-10-27)",
     "name": "Krains Fuletra",
     "overseas": false,
     "role": "all_rounder",
     "role_note": "Wikipedia, 'List of 2026 Indian Premier League personnel changes' (CC BY-SA 4.0), revision 1375677829, sold-players table: role, 'Uncapped', base price 30 lakh",
     "salary_cr": 0.3,
     "status": "bought",
-    "wiki_title": "Krains Fuletra",
-    "dob": "2004-06-19",
-    "dob_source": "https://www.espncricinfo.com/cricketers/krains-fuletra-1467631 (web search 2026-10-27)"
-   },
-   {
-    "acquired": "auction",
-    "country": "AUS",
-    "cricsheet_id": "f787e0eb",
-    "name": "Jack Edwards",
-    "overseas": true,
-    "salary_cr": 3.0,
-    "status": "bought",
-    "wiki_title": "Jack Edwards (cricketer, born 2000)",
-    "withdrawn": true
+    "wiki_title": "Krains Fuletra"
    },
    {
     "acquired": "replacement",
@@ -3178,14 +3196,14 @@
     "acquired": "replacement",
     "country": "IND",
     "country_note": "set by hand: an Indian domestic player (no flag on the page, no country in the player master)",
+    "dob": "2007-05-28",
+    "dob_source": "https://www.iplt20.com/players/r-s-ambrish/33341 (web search 2026-10-27)",
     "name": "RS Ambrish",
     "overseas": false,
     "replaced": "Shivam Mavi",
     "salary_cr": 0.45,
     "status": "replacement",
-    "wiki_title": "RS Ambrish",
-    "dob": "2007-05-28",
-    "dob_source": "https://www.iplt20.com/players/r-s-ambrish/33341 (web search 2026-10-27)"
+    "wiki_title": "RS Ambrish"
    },
    {
     "acquired": "trade",
@@ -3200,6 +3218,36 @@
      "salary_before_cr": 10.75
     },
     "wiki_title": "T. Natarajan"
+   },
+   {
+    "acquired": "trade",
+    "country": "IND",
+    "cricsheet_id": "a2f46292",
+    "name": "Khaleel Ahmed",
+    "overseas": false,
+    "salary_cr": 4.8,
+    "status": "retained",
+    "trade": {
+     "from": "CSK",
+     "salary_before_cr": 4.8
+    },
+    "wiki_title": "Khaleel Ahmed",
+    "withdrawn": true
+   },
+   {
+    "acquired": "trade",
+    "country": "AUS",
+    "cricsheet_id": "9eb1455b",
+    "name": "Nathan Ellis",
+    "overseas": true,
+    "salary_cr": 2.0,
+    "status": "retained",
+    "trade": {
+     "from": "CSK",
+     "salary_before_cr": 2.0
+    },
+    "wiki_title": "Nathan Ellis",
+    "withdrawn": true
    }
   ]
  },

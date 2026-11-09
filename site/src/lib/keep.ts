@@ -240,6 +240,8 @@ export interface Assessment {
   default_keep: boolean;
   /** no ball-by-ball record: `price` is the market model's prior (NO_DATA_LABEL), not a rating */
   no_data: boolean;
+  /** traded in since the season: kept, not predicted (p_keep null, rec "keep") */
+  traded_in: boolean;
   /** bought at the last auction above the upper quartile on domestic form we can't see (formUnseen) */
   form_unseen: boolean;
   outlook: string;
@@ -504,6 +506,24 @@ export function assess(p: KeepPlayer, form: LeagueForm | null = null, cost: numb
   let noData = false;
   if (p.value === null || p.value === undefined) {
     if (!mkt) {
+      if (p.trade) {
+        // traded in: kept, not predicted (below)
+        return {
+          ...base,
+          price: null,
+          price_central: null,
+          onfield: null,
+          p_bought: null,
+          surplus: null,
+          p_keep: null,
+          default_keep: true,
+          no_data: false,
+          form_unseen: false,
+          traded_in: true,
+          rec: "keep",
+          reason: `Traded in from ${p.trade.from} before the deadline, so kept: a franchise trades for a player to keep him, and the model makes no call on trades.${costSentence(p, salary)}`,
+        };
+      }
       return {
         ...base,
         price: null,
@@ -515,6 +535,7 @@ export function assess(p: KeepPlayer, form: LeagueForm | null = null, cost: numb
         default_keep: true,
         no_data: false,
         form_unseen: false,
+        traded_in: false,
         rec: "borderline",
         reason: `Not enough balls in our data to rate him: decide on scouting (he costs ${crExact(salary)} cr).${costSentence(p, salary)}`,
       };
@@ -548,7 +569,14 @@ export function assess(p: KeepPlayer, form: LeagueForm | null = null, cost: numb
   let rec: Rec;
   let reason: string;
   let pKeep: number | null;
-  if (model === null) {
+  const tradedIn = !!p.trade;
+  if (tradedIn) {
+    // traded in since the season: the franchise traded for him to keep him, so he is kept, not
+    // predicted (the keep model was fitted with traded players left out). Mirror of keep.py.
+    rec = "keep";
+    pKeep = null;
+    reason = `${lead ? lead + " " : ""}Traded in from ${p.trade?.from} before the deadline, so kept: a franchise trades for a player to keep him, and the model makes no call on trades. Worth about ${cr(price)} cr at auction against ${crExact(salary)} to keep.`;
+  } else if (model === null) {
     rec = "borderline";
     reason = `${lead ? lead + " " : ""}Worth about ${cr(price)} cr at auction against ${crExact(salary)} to keep; no retention model is loaded, so no call.`;
     pKeep = null;
@@ -592,6 +620,7 @@ export function assess(p: KeepPlayer, form: LeagueForm | null = null, cost: numb
     p_keep: pKeep,
     default_keep: pKeep === null ? true : pKeep >= KEEP_CALL,
     no_data: noData,
+    traded_in: tradedIn,
     rec,
     reason,
     should: unseen ? null : shouldOf(price, central, salary),
@@ -714,7 +743,8 @@ function fitOrder(a: AssessedPlayer, b: AssessedPlayer): number {
   const ta = a.rec === "borderline" ? 0 : 1;
   const tb = b.rec === "borderline" ? 0 : 1;
   if (ta !== tb) return ta - tb;
-  const r = (p: AssessedPlayer) => (p.p_keep === null ? -Infinity : p.p_keep);
+  // a player traded in is kept, not predicted: he goes last (keep.py `_fit_order`)
+  const r = (p: AssessedPlayer) => (p.traded_in ? Infinity : p.p_keep === null ? -Infinity : p.p_keep);
   const ra = r(a);
   const rb = r(b);
   if (ra !== rb) return ra < rb ? -1 : 1;

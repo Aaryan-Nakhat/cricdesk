@@ -562,10 +562,10 @@ function KeepCalculator({ data, pool }: { data: KeepData; pool: Parameters<typeo
                       <span className="text-[11px] text-muted">too little recent play</span>
                     )}
                   </td>
-                  <td className="td stat-num text-right" title="The chance a franchise keeps a player like him at the retention deadline (a model of every real deadline 2018-2026)">
-                    {p.p_keep === null ? "—" : `${Math.round(100 * p.p_keep)}%`}
+                  <td className="td stat-num text-right" title={p.traded_in ? "Traded in before the deadline: kept, not predicted" : "The chance a franchise keeps a player like him at the retention deadline (a model of every real deadline 2018-2026)"}>
+                    {p.traded_in ? "traded in" : p.p_keep === null ? "—" : `${Math.round(100 * p.p_keep)}%`}
                   </td>
-                  <td className="td"><Badge tone={REC_TONE[p.rec]}>{REC_LABEL[p.rec]}</Badge></td>
+                  <td className="td"><Badge tone={REC_TONE[p.rec]}>{p.traded_in ? "Kept (trade)" : REC_LABEL[p.rec]}</Badge></td>
                   <td className="td" title={p.price === null ? "No market price" : `Market price ${cr(p.price)} cr (upper quartile ${cr(p.price_central ?? p.price)}) against ${cr(p.cost)} cr to keep`}>
                     {p.should ? <Badge tone={SHOULD_TONE[p.should]}>{SHOULD_LABEL[p.should]}</Badge> : p.form_unseen ? <span className="text-muted" title="Bought at the last auction above anything players like him fetch, on domestic form our data doesn't have">Can't tell</span> : <span className="text-muted">—</span>}
                   </td>

@@ -71,7 +71,7 @@ behaves, not the exact crore of a real sale. → [How the auction works](docs/AU
 
 <p align="center"><img src="docs/media/keep.png" alt="Keep or release for one franchise: cost to keep, market price, the chance a franchise keeps a player like him and the call, with the model's test record and the squad that follows" width="100%"></p>
 
-IPL 2027 retention lists are due on 15 November 2026 (as reported). Pick a franchise and see what keeping each
+IPL 2027 retention lists are due on 17 November 2026 (as reported; moved from 15 November). Pick a franchise and see what keeping each
 player costs (his salary, or for a 2025 mega-auction retention the 2025 retention slabs, assumed to carry into
 2027) against his market price (what players like him have fetched at real auctions), and a **Keep / Release
 / Toss-up** call from **what franchises actually do**: the chance a franchise keeps a player like him, from
@@ -216,7 +216,7 @@ yourself with `scripts/backtest_ratings.py` and `scripts/backtest_newcomers.py`.
 to 2024 and then scored on the 2025 and 2026 seasons. Those two seasons have since been looked at many times
 while building CricDesk (several price recipes were scored on them, and the Bid plan replays have seen them
 five times), so they are no longer a clean test: treat every 2025–26 figure as optimistic. The clean test is
-the 2027 retention lists (15 Nov 2026) and auction.
+the 2027 retention lists (17 Nov 2026) and auction.
 → [The backtest in detail](docs/METHODOLOGY.md#8-does-it-predict-the-backtest)
 
 ## 🧠 How it works

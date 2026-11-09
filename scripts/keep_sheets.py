@@ -86,6 +86,8 @@ def _pct(p: float | None) -> str:
 
 def _call(p: dict) -> str:
     pk = p.get("p_keep")
+    if p.get("traded_in"):
+        return "Kept (trade)"
     if pk is None or TOSS[0] <= pk < TOSS[1]:
         return f"Toss-up ({'kept' if p['kept'] else 'released'})"
     return "Keep" if pk >= TOSS[1] else "Release"

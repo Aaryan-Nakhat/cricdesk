@@ -129,6 +129,12 @@ def run(
             continue
         rows = squads["squads"].get(src, [])
         row = next((r for r in rows if r.get("wiki_title") == t["wiki_title"]), None)
+        if row is None:
+            # the traded table may name him without his article's disambiguation (a plain
+            # {{sortname}}, e.g. "Jack Edwards" for "Jack Edwards (cricketer, born 2000)"): match
+            # on the name within the selling squad, only when exactly one row carries it
+            same = [r for r in rows if r.get("name") == t.get("name")]
+            row = same[0] if len(same) == 1 else None
         if row is None:  # already applied (he's in the new squad) or not on our list
             continue
         rows.remove(row)

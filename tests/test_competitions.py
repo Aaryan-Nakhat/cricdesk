@@ -115,7 +115,7 @@ def test_shipped_competitions_file_is_valid():
     assert "ipl_2027" in comps
     c = comps["ipl_2027"]
     assert c.league == "ipl" and c.cycle == "mini" and c.season == 2027
-    assert c.retention_deadline == "2026-11-15"
+    assert c.retention_deadline == "2026-11-17"
     assert c.squad_max == 25 and c.overseas_max == 8 and c.max_retained == 0 and c.rtm_cards == 0
     # the 2027 purse isn't published: it must be labelled an assumption
     assert "purse" in c.assumed
@@ -175,7 +175,11 @@ def test_squads_within_the_rules(ipl):
         # signed during the season can push a squad's listed size past it, not the keepable core)
         core = [r for r in rows if r.get("acquired") != "replacement"]
         assert c.squad_min <= len(core) <= c.squad_max, (team, len(core))
-        assert sum(1 for r in core if r["overseas"]) <= c.overseas_max, team
+        # a trade before the deadline can push a squad past the overseas cap (CSK, Nov 2026: two
+        # overseas in, one out, 9 under contract); the franchise must release before the deadline and
+        # the default plan does (`fit_to_rules`). Without the trades in, the squad is within it.
+        pre = [r for r in core if not r.get("trade")]
+        assert sum(1 for r in pre if r["overseas"]) <= c.overseas_max, team
 
 
 def test_retired_and_released_players_are_not_keepable(ipl):

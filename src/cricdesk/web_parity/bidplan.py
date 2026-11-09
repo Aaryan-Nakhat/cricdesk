@@ -411,7 +411,12 @@ def open_places(players: list[dict], limit: int) -> None:
         return
     movable = sorted(
         (p for p in kept if not p["overridden"]),
-        key=lambda p: (p.get("p_keep") is not None, p.get("p_keep") or 0.0, p["key"]),
+        # a player traded in is kept, not predicted: he goes last
+        key=lambda p: (
+            2 if p.get("traded_in") else p.get("p_keep") is not None,
+            p.get("p_keep") or 0.0,
+            p["key"],
+        ),
     )
     for p in movable[:extra]:
         p["kept"] = False

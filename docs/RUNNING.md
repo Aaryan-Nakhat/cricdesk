@@ -107,7 +107,7 @@ cricdesk bidplan --team RCB
 cricdesk bidplan --team CSK --release "Prashant Veer" --need spinner=4 --max "Rashid Khan=12" --csv csk.csv
 ```
 
-When the official auction list is published (after the 15 November retentions), write it to
+When the official auction list is published (after the 17 November retentions), write it to
 `data/curated/ipl_auction_register.json` as `[{"id": "<cricsheet id>", "base_price": 2.0}, …]` (also update
 `data/curated/ipl_squads_2026.json` with the real retentions) and re-export the IPL
 (`scripts/export_site.py -c ipl --skip-prep`): the page and the CLI then plan on exactly those players.

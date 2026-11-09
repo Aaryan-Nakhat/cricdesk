@@ -456,12 +456,20 @@ def assess(p: dict, form: dict | None = None, cost: float | None = None) -> dict
         "cost": salary,
         "should": None,
         "form_unseen": False,
+        "traded_in": False,
     }
     out["no_data"] = False
     mkt = has_market_inputs(p)
     lead = ""
     if value is None:
         if not mkt:
+            if p.get("trade"):  # traded in: kept, not predicted (below)
+                out.update(rec="keep", traded_in=True)
+                out["reason"] = (
+                    f"Traded in from {p['trade'].get('from')} before the deadline, so kept: a "
+                    f"franchise trades for a player to keep him, and the model makes no call on trades."
+                ) + cost_sentence(p, salary)
+                return out
             out["rec"] = "borderline"
             out["reason"] = (
                 f"Not enough balls in our data to rate him: decide on scouting (he costs {cr_exact(salary)} cr)."
@@ -504,7 +512,18 @@ def assess(p: dict, form: dict | None = None, cost: float | None = None) -> dict
     fc = p.get("forecast") or {}
     ties = _ties(p)
     tie_text = f" ({', '.join(ties)})" if ties else ""
-    if model is None:
+    traded_in = bool(p.get("trade"))
+    if traded_in:
+        # traded in since the season: the franchise traded for him to keep him, so he is kept, not
+        # predicted (the keep model was fitted with traded players left out: `keep_backtest._rows`)
+        rec = "keep"
+        p_keep = None
+        reason = (lead + " " if lead else "") + (
+            f"Traded in from {p['trade'].get('from')} before the deadline, so kept: a franchise "
+            f"trades for a player to keep him, and the model makes no call on trades. Worth about "
+            f"{cr(price)} cr at auction against {cr_exact(salary)} to keep."
+        )
+    elif model is None:
         rec = "borderline"
         reason = (lead + " " if lead else "") + (
             f"Worth about {cr(price)} cr at auction against {cr_exact(salary)} to keep; no "
@@ -540,6 +559,7 @@ def assess(p: dict, form: dict | None = None, cost: float | None = None) -> dict
         surplus=price - salary,
         p_keep=p_keep,
         default_keep=True if p_keep is None else p_keep >= KEEP_CALL,
+        traded_in=traded_in,
         rec=rec,
         reason=reason,
         should=None if unseen else should_of(price, central, salary),
@@ -631,10 +651,11 @@ def market_for(
 
 def _fit_order(p: dict) -> tuple:
     """Who goes first when the default plan is over a limit: Toss-up before Keep, then the
-    lowest chance a franchise keeps him (an unpriced player first), then the key."""
+    lowest chance a franchise keeps him (an unpriced player first, one traded in last), then the key."""
     tier = 0 if p["rec"] == "borderline" else 1
     pk = p.get("p_keep")
-    return (tier, -math.inf if pk is None else pk, p["key"])
+    # a player traded in is kept, not predicted: he goes last
+    return (tier, math.inf if p.get("traded_in") else -math.inf if pk is None else pk, p["key"])
 
 
 def fit_to_rules(players: list[dict], rules: dict[str, Any]) -> None:

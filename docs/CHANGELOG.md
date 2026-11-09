@@ -8,6 +8,24 @@ versioning starts at v0.1.0.
 
 ## [Unreleased]
 
+### Trades: kept, not predicted; deadline 17 Nov (2026-11-09)
+
+- **A player traded in since the 2026 season is Kept (trade), not given a chance.** A franchise trades
+  for a player to keep him, and the Keep model was fitted with traded players left out, so it now makes
+  no call on them (Python `web_parity.keep.assess` and `keep.ts`, in parity). He is the last to go when
+  the default plan must shed players to fit a limit (`fit_to_rules`, Bid plan's `open_places`); his
+  Should they? still shows.
+- **Trades refreshed to 9 Nov:** the 5 Nov CSK–SRH four-player trade (Livingstone and Edwards to CSK,
+  Khaleel Ahmed and Ellis to SRH) joins Pant, Kuldeep, Natarajan and Ansari. `ipl_squad_salaries.py` now
+  also matches a traded player by name within the selling squad when the traded table links no article
+  (it had missed Jack Edwards, "Jack Edwards (cricketer, born 2000)" in our squad).
+- **Retention deadline 17 Nov 2026** (moved from 15 Nov for the India–NZ fifth ODI; press, early Nov):
+  `config/competitions.toml`, the site, README and docs.
+- The dated calls (`data/predictions/ipl_keep_2027.json`, 30 Oct) are unchanged. When they are scored,
+  traded players are left out, as in the backtest.
+- The IPL metric caches were recomputed: the rename changed the metrics code's hash, so the export
+  refused them as stale.
+
 ### Star prices and honest baselines (2026-11-01)
 
 A fresh six-lens review found two serious problems; each fix was declared before its numbers.

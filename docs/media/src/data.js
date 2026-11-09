@@ -1,6 +1,6 @@
 // Written by scripts/media_data.py: the numbers the README visuals show. Do not edit by hand.
 window.MEDIA = {
- "generated": "2026-10-31",
+ "generated": "2026-11-09",
  "data_as_of": "2026-05-31",
  "auction": {
   "purse": 120.0,
@@ -14,7 +14,7 @@ window.MEDIA = {
     "retain": 65.0,
     "bought": 53.3,
     "used": 118.3,
-    "n_bought": 18
+    "n_bought": 17
    },
    {
     "team": "MI",
@@ -52,8 +52,8 @@ window.MEDIA = {
     "team": "PBKS",
     "kept": 2,
     "retain": 9.5,
-    "bought": 105.0,
-    "used": 114.5,
+    "bought": 104.9,
+    "used": 114.4,
     "n_bought": 21
    },
    {
@@ -262,7 +262,7 @@ window.MEDIA = {
   "fewest": {
    "team": "PBKS",
    "kept": 2,
-   "bought": 105.0,
+   "bought": 104.9,
    "most_likely_of_top20": 14,
    "max_bought": true
   }
@@ -270,7 +270,7 @@ window.MEDIA = {
  "keep": {
   "team": "RCB",
   "competition": "IPL 2027 (mini auction)",
-  "deadline": "2026-11-15",
+  "deadline": "2026-11-17",
   "purse": 125.0,
   "purse_assumed": true,
   "bands": {
@@ -722,35 +722,35 @@ window.MEDIA = {
      "from": "MI",
      "rivals": 0.3,
      "max": 0.9,
-     "p_le": 88,
+     "p_le": 84,
      "gain": 0.33
-    },
-    {
-     "name": "Jake Fraser-McGurk",
-     "slot": "Opener",
-     "from": null,
-     "rivals": 9.0,
-     "max": 3.5,
-     "p_le": 27,
-     "gain": 0.69
     },
     {
      "name": "Mitchell Santner",
      "slot": "Spinner",
      "from": "MI",
-     "rivals": 13.8,
-     "max": 5.0,
-     "p_le": 20,
+     "rivals": 13.4,
+     "max": 4.7,
+     "p_le": 18,
      "gain": 0.98
     },
     {
      "name": "Lhuan-dre Pretorius",
      "slot": "Wicketkeeper",
      "from": "RR",
-     "rivals": 10.8,
-     "max": 10.0,
-     "p_le": 43,
+     "rivals": 10.0,
+     "max": 9.8,
+     "p_le": 48,
      "gain": 0.4
+    },
+    {
+     "name": "Jake Fraser-McGurk",
+     "slot": "Opener",
+     "from": null,
+     "rivals": 9.4,
+     "max": 3.7,
+     "p_le": 24,
+     "gain": 0.69
     },
     {
      "name": "Atharva Taide",
@@ -758,7 +758,7 @@ window.MEDIA = {
      "from": null,
      "rivals": 0.3,
      "max": 0.9,
-     "p_le": 64,
+     "p_le": 60,
      "gain": 0.23
     }
    ],
@@ -770,11 +770,11 @@ window.MEDIA = {
       "max": 11.8
      },
      {
-      "name": "Wanindu Hasaranga",
+      "name": "Akeal Hosein",
       "max": 11.3
      },
      {
-      "name": "Maheesh Theekshana",
+      "name": "Wanindu Hasaranga",
       "max": 11.3
      }
     ]
@@ -976,19 +976,19 @@ window.MEDIA = {
    {
     "a": "Vaibhav Suryavanshi",
     "b": "Virat Kohli",
-    "p": 0.999837548578123,
+    "p": 0.9998375488259432,
     "verdict": "Vaibhav Suryavanshi dominant (100%)"
    },
    {
     "a": "Sai Sudharsan",
     "b": "Virat Kohli",
-    "p": 0.6342311942752195,
+    "p": 0.6342309213070012,
     "verdict": "Sai Sudharsan likely better (63%)"
    },
    {
     "a": "Shubman Gill",
     "b": "Virat Kohli",
-    "p": 0.7810625271282063,
+    "p": 0.7810624161077031,
     "verdict": "Shubman Gill clearly better (78%)"
    }
   ],

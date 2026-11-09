@@ -151,7 +151,7 @@ const SECTIONS: Section[] = [
     title: "Keep or release (retentions)",
     body: (
       <>
-        Before the retention deadline (IPL 2027: 15 November 2026, as reported) a franchise decides whom to keep.
+        Before the retention deadline (IPL 2027: 17 November 2026, as reported) a franchise decides whom to keep.
         For every player in its squad we set what keeping him <strong>costs</strong> (his salary; for a player
         retained at the 2025 mega auction, the 2025 retention slabs, assumed to carry into 2027) against his{" "}
         <strong>market price</strong> (what players like him have fetched at real IPL auctions, each retention
