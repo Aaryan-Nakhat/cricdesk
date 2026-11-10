@@ -81,7 +81,7 @@
   }
  ],
  "changes_since_season": {
-  "_source": "Wikipedia, 'List of 2027 Indian Premier League personnel changes' (CC BY-SA 4.0), revision 1383895615 of 2026-11-05T12:13:40Z: https://en.wikipedia.org/wiki/List_of_2027_Indian_Premier_League_personnel_changes",
+  "_source": "Wikipedia, 'List of 2027 Indian Premier League personnel changes' (CC BY-SA 4.0), revision 1384848250 of 2026-11-10T10:17:32Z: https://en.wikipedia.org/wiki/List_of_2027_Indian_Premier_League_personnel_changes",
   "applied": [
    {
     "from": "LSG",
@@ -154,6 +154,22 @@
     "salary_cr": 3.0,
     "to": "CSK",
     "wiki_title": "Jack Edwards"
+   },
+   {
+    "from": "PBKS",
+    "kind": "trade",
+    "name": "Arshdeep Singh",
+    "salary_cr": 18.0,
+    "to": "MI",
+    "wiki_title": "Arshdeep Singh"
+   },
+   {
+    "from": "MI",
+    "kind": "trade",
+    "name": "Hardik Pandya",
+    "salary_cr": 16.35,
+    "to": "PBKS",
+    "wiki_title": "Hardik Pandya"
    }
   ]
  },
@@ -1805,16 +1821,6 @@
    {
     "acquired": "retained",
     "country": "IND",
-    "cricsheet_id": "dbe50b21",
-    "name": "Hardik Pandya",
-    "overseas": false,
-    "salary_cr": 16.35,
-    "status": "retained",
-    "wiki_title": "Hardik Pandya"
-   },
-   {
-    "acquired": "retained",
-    "country": "IND",
     "cricsheet_id": "271f83cd",
     "name": "Suryakumar Yadav",
     "overseas": false,
@@ -2094,6 +2100,20 @@
     "salary_cr": 0.3,
     "status": "replacement",
     "wiki_title": "Ruchit Ahir"
+   },
+   {
+    "acquired": "trade",
+    "country": "IND",
+    "cricsheet_id": "244048f6",
+    "name": "Arshdeep Singh",
+    "overseas": false,
+    "salary_cr": 18.0,
+    "status": "retained",
+    "trade": {
+     "from": "PBKS",
+     "salary_before_cr": 18.0
+    },
+    "wiki_title": "Arshdeep Singh"
    }
   ],
   "PBKS": [
@@ -2106,16 +2126,6 @@
     "salary_cr": 26.75,
     "status": "retained",
     "wiki_title": "Shreyas Iyer"
-   },
-   {
-    "acquired": "retained",
-    "country": "IND",
-    "cricsheet_id": "244048f6",
-    "name": "Arshdeep Singh",
-    "overseas": false,
-    "salary_cr": 18.0,
-    "status": "retained",
-    "wiki_title": "Arshdeep Singh"
    },
    {
     "acquired": "retained",
@@ -2358,6 +2368,20 @@
     "salary_cr": 0.3,
     "status": "bought",
     "wiki_title": "Vishal Nishad"
+   },
+   {
+    "acquired": "trade",
+    "country": "IND",
+    "cricsheet_id": "dbe50b21",
+    "name": "Hardik Pandya",
+    "overseas": false,
+    "salary_cr": 16.35,
+    "status": "retained",
+    "trade": {
+     "from": "MI",
+     "salary_before_cr": 16.35
+    },
+    "wiki_title": "Hardik Pandya"
    }
   ],
   "RCB": [

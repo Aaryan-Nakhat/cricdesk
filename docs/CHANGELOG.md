@@ -8,6 +8,15 @@ versioning starts at v0.1.0.
 
 ## [Unreleased]
 
+### Hardik–Arshdeep trade; readable site tables (2026-11-11)
+
+- **Trades refreshed to 10 Nov** (Wikipedia revision of 10 Nov): Hardik Pandya MI → PBKS (16.35 cr) and
+  Arshdeep Singh PBKS → MI (18 cr), both Kept (trade). IPL data re-exported. The dated 2027 calls are unchanged.
+- **Site tables read cleanly** (commit 6e6bc37fa): Keep (13 → 8 columns) and Bid plan (12 → 9) fit a laptop
+  screen; sentence-case headers with units; a shared glossary (`site/src/lib/glossary.ts`) behind an (i) per
+  column header, also listed on How it works; phase labels corrected to the data (middle overs 7–16, death
+  17–20); Records' most runs in an over shows overs 1–20; profile skill bars read "about N% better than average".
+
 ### Trades: kept, not predicted; deadline 17 Nov (2026-11-09)
 
 - **A player traded in since the 2026 season is Kept (trade), not given a chance.** A franchise trades
