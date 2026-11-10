@@ -21,6 +21,8 @@ versioning starts at v0.1.0.
   (it had missed Jack Edwards, "Jack Edwards (cricketer, born 2000)" in our squad).
 - **Retention deadline 17 Nov 2026** (moved from 15 Nov for the India–NZ fifth ODI; press, early Nov):
   `config/competitions.toml`, the site, README and docs.
+- **Can't tell is now Can't judge**, with its reason on the Keep page ("bought on 2025 domestic form our
+  data doesn't have"), for the uncapped buys whose price rests on domestic cricket after Dec 2024.
 - The dated calls (`data/predictions/ipl_keep_2027.json`, 30 Oct) are unchanged. When they are scored,
   traded players are left out, as in the backtest.
 - The IPL metric caches were recomputed: the rename changed the metrics code's hash, so the export

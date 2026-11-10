@@ -2792,7 +2792,7 @@ group stage and all of SMAT 2025-26 as missing) and are priced from the market (
    there; no source publishes the 2025–26 season as data, and scraping scorecard sites is not done
    here). An uncapped Indian bought at the last auction (a sale, not a retention) for more than the upper
    quartile of players like him was bought on that form: the reason says so, and **Should they?** reads
-   *Can't tell* instead of No (`form_unseen` ⇄ `formUnseen`, parity-tested). On the 2027 squads: Prashant
+   *Can't judge* instead of No (`form_unseen` ⇄ `formUnseen`, parity-tested). On the 2027 squads: Prashant
    Veer and Kartik Sharma (CSK, 14.2 cr), Tejasvi Singh (KKR, 3), Mukul Choudhary (LSG, 2.6), Akshat
    Raghuwanshi (LSG, 2.2), Ravi Singh (RR, 0.95). A player capped since (Auqib Nabi, 8.4 cr, one India
    cap) is outside it. The call is unchanged: it is what franchises do.
