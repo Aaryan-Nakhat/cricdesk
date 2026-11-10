@@ -3,6 +3,7 @@ import { Area, CartesianGrid, ComposedChart, Line, ReferenceLine, ResponsiveCont
 import { useAsync } from "@/lib/useAsync";
 import { useTheme } from "@/lib/theme";
 import { Badge, Card, CardHeader, InfoTip } from "@/components/ui";
+import { Term } from "@/components/Term";
 import { FLAG_LABEL, getForecast, seasonsOf, signed, type ForecastData, type ForecastRole } from "@/lib/forecast";
 
 const Z80 = 1.2816;
@@ -65,8 +66,10 @@ function RoleFan({ data, role, label, color }: { data: ForecastData; role: Forec
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm font-semibold text-fg">{label}</span>
         <Badge tone={TONE[role.flag]}>{FLAG_LABEL[role.flag]}</Badge>
-        <span className="text-xs text-muted">
-          current level {signed(role.level)} · career rating {signed(role.now)}
+        <span className="inline-flex flex-wrap items-center gap-1 text-xs text-muted">
+          <Term title="Current level" tip="Where his true level probably sits now, in value (runs per 100 balls above an average IPL player), from his seasons so far with recent ones counting most. The forecast starts here.">current level {signed(role.level)}</Term>
+          ·
+          <Term title="Career rating" tip="His value over his whole career, every season weighted alike, in the same unit. A big gap from the current level means his form has moved.">career rating {signed(role.now)}</Term>
         </span>
       </div>
       {role.recent.length > 0 && (
@@ -94,7 +97,7 @@ function RoleFan({ data, role, label, color }: { data: ForecastData; role: Forec
           <div key={s.season} className="rounded-lg border border-border bg-surface px-2 py-1.5">
             <div className="text-muted">{s.season}</div>
             <div className="text-sm font-semibold text-fg">{signed(s.median)}</div>
-            <div className="text-muted">regular {Math.round(s.p_regular * 100)}%</div>
+            <div className="text-muted">{Math.round(s.p_regular * 100)}% chance a regular</div>
           </div>
         ))}
       </div>

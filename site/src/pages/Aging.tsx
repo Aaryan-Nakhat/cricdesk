@@ -24,12 +24,12 @@ type Role = "batting" | "bowling";
 
 const METRICS: Record<Role, { key: string; label: string; overlay: string | null }[]> = {
   batting: [
-    { key: "sr", label: "Strike rate", overlay: "sr" },
-    { key: "average", label: "Average", overlay: null },
+    { key: "sr", label: "Strike rate (runs per 100 balls)", overlay: "sr" },
+    { key: "average", label: "Average (runs per dismissal)", overlay: null },
   ],
   bowling: [
-    { key: "economy", label: "Economy", overlay: "economy" },
-    { key: "strike_rate", label: "Strike rate", overlay: null },
+    { key: "economy", label: "Economy (runs per over)", overlay: "economy" },
+    { key: "strike_rate", label: "Balls per wicket", overlay: null },
   ],
 };
 

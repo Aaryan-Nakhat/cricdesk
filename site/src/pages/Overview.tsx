@@ -9,6 +9,7 @@ import { MetricInfo } from "@/components/MetricInfo";
 import { defaultMinMatches } from "@/lib/filters";
 import { NAV, NAV_GROUPS } from "@/lib/nav";
 import { Card, StatTile, Badge } from "@/components/ui";
+import { Term } from "@/components/Term";
 import { AUTHOR, AUTHOR_URL, cn, collectionLabel, fmt, prettyDate } from "@/lib/utils";
 
 // The IPL 2027 retention deadline the hero leads with (as reported; config/competitions.toml
@@ -113,7 +114,9 @@ export function Overview() {
           <p className="mb-3 text-xs text-muted">
             Win chance added per match {recent ? "over the last three seasons" : "over their careers"} — active
             players with {minM}+ matches in that time. +5% means he adds five percentage points to his side's
-            chance of winning in a typical game.
+            chance of winning in a typical game.{" "}
+            <Term title="Wins added" tip="Win chance added summed over all his matches in that period: every 1.0 is one whole win's worth. Like career runs, it grows with every match played, so compare it only between players with similar numbers of matches.">Wins added</Term>{" "}
+            is the total over those matches.
           </p>
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-5">
             {winners.map((r, i) => (

@@ -42,15 +42,25 @@ POS_LABEL = {
 # MetricCard. One card per catalog metric the player appears in.
 METRIC_CARDS = {
     "ngi": ("Net Game Impact", "ngi_per_match", "win chance added per match", 1),
-    "pressure_runs": ("Pressure Runs", "pressure_sr_per_100_balls", "SR under chase pressure", 1),
-    "intent_curve": ("Intent Curve", "early_sr", "SR over the first 10 balls", 1),
+    "pressure_runs": (
+        "Pressure Runs",
+        "pressure_sr_per_100_balls",
+        "strike rate when a chase gets tight",
+        1,
+    ),
+    "intent_curve": ("Intent Curve", "early_sr", "strike rate over his first 10 balls", 1),
     "dot_ball_recovery": (
         "Dot-Ball Recovery",
         "runs_per_6_after_dot",
-        "runs / 6 balls after a dot",
+        "runs in the 6 balls after a dot ball",
         1,
     ),
-    "counter_attack": ("Counter-Attack", "counter_attack_sr", "SR after a partner falls", 1),
+    "counter_attack": (
+        "Counter-Attack",
+        "counter_attack_sr",
+        "strike rate just after a partner gets out",
+        1,
+    ),
     "boundary_dependency": ("Boundary Dependency", "bdr_pct", "% of runs from boundaries", 1),
     "dot_avoidance": (
         "Dot-Ball Avoidance",
@@ -58,12 +68,37 @@ METRIC_CARDS = {
         "dots avoided per 100 balls vs average",
         1,
     ),
-    "pace_spin": ("Pace vs Spin", "spin_edge", "runs / 100 balls better v spin than pace", 1),
+    "pace_spin": (
+        "Pace vs Spin",
+        "spin_edge",
+        "runs per 100 balls better against spin than pace",
+        1,
+    ),
     "finisher": ("Finisher Index", "above_per100", "runs / 100 above avg, chase overs 17-20", 1),
-    "hand_split": ("Left vs Right", "left_edge", "runs / 100 saved, left-handers v right", 1),
-    "wicket_quality": ("Wicket Quality", "wicket_quality", "avg skill of batters dismissed", 3),
-    "crease_longevity": ("Crease Longevity", "longevity_index", "balls per dismissal vs cohort", 2),
-    "slow_start_cost": ("Slow-Start Cost", "slow_start_cost", "career SR − first-20-ball SR", 1),
+    "hand_split": (
+        "Left vs Right",
+        "left_edge",
+        "runs per 100 balls saved against left- vs right-handers",
+        1,
+    ),
+    "wicket_quality": (
+        "Wicket Quality",
+        "wicket_quality",
+        "average skill of the batters he dismisses",
+        3,
+    ),
+    "crease_longevity": (
+        "Crease Longevity",
+        "longevity_index",
+        "balls per dismissal against similar batters",
+        2,
+    ),
+    "slow_start_cost": (
+        "Slow-Start Cost",
+        "slow_start_cost",
+        "career strike rate minus his first-20-balls strike rate",
+        1,
+    ),
     "keeping": ("Wicketkeeping", "dismissals", "catches + stumpings + run-outs", 0),
     "fielding": ("Fielding", "dismissals", "catches + run-outs", 0),
 }

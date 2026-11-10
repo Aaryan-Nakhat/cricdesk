@@ -7,6 +7,7 @@ import { useAsync } from "@/lib/useAsync";
 import { getProfile, getCohorts, getValueNow, displayName, type Profile, type PlayerRow, type ValueNow } from "@/lib/data";
 import { Combobox } from "@/components/Combobox";
 import { PageTitle, Card, CardHeader, Spinner, ErrorBox, Empty, Badge, StatTile, Segmented, InfoTip, StaleBadge } from "@/components/ui";
+import { Term } from "@/components/Term";
 import { MetricInfo } from "@/components/MetricInfo";
 import { FormForecast } from "@/components/FormForecast";
 import { METRIC_BY_SLUG, fmtMetric } from "@/lib/metrics";
@@ -44,10 +45,15 @@ function SkillAxis({
     <div>
       <div className="flex items-baseline justify-between gap-3">
         <span className="text-xs font-medium text-fg">{label}</span>
-        <span className={cn("stat-num text-sm font-semibold", good ? "text-accent-glow" : "text-ball")}>
-          {mean >= 0 ? "+" : ""}
-          {mean.toFixed(3)}
-          {sd !== null && <span className="ml-1 text-[11px] text-muted">±{sd.toFixed(3)}</span>}
+        <span className="flex flex-col items-end text-right">
+          <span className={cn("whitespace-nowrap text-sm font-semibold", good ? "text-accent-glow" : "text-ball")}>
+            about {Math.round(100 * (Math.exp(Math.abs(mean)) - 1))}% {good ? "better" : "worse"} than average
+          </span>
+          <span className="stat-num whitespace-nowrap text-[11px] text-muted" title="The model's own number (log scale: +0.10 is about 10% better than average) and ± how sure it is">
+            ({mean >= 0 ? "+" : ""}
+            {mean.toFixed(2)}
+            {sd !== null && <> ± {sd.toFixed(2)}</>})
+          </span>
         </span>
       </div>
       <div className="relative mt-2 h-3 w-full rounded-full bg-border/50">
@@ -83,18 +89,18 @@ const INTENT_BUCKETS = ["0-5", "6-10", "11-20", "21-30", "31-50", "51+"];
 // the player appears in (all 12 boards). Mirrored by 8_Player_Profile.py.
 const METRIC_CARDS: Record<string, [string, string, string, number]> = {
   ngi: ["Net Game Impact", "ngi_per_match", "win chance added per match", 1],
-  pressure_runs: ["Pressure Runs", "pressure_sr_per_100_balls", "SR under chase pressure", 1],
-  intent_curve: ["Intent Curve", "early_sr", "SR over the first 10 balls", 1],
-  dot_ball_recovery: ["Dot-Ball Recovery", "runs_per_6_after_dot", "runs / 6 balls after a dot", 1],
-  counter_attack: ["Counter-Attack", "counter_attack_sr", "SR after a partner falls", 1],
+  pressure_runs: ["Pressure Runs", "pressure_sr_per_100_balls", "strike rate when a chase gets tight", 1],
+  intent_curve: ["Intent Curve", "early_sr", "strike rate over his first 10 balls", 1],
+  dot_ball_recovery: ["Dot-Ball Recovery", "runs_per_6_after_dot", "runs in the 6 balls after a dot ball", 1],
+  counter_attack: ["Counter-Attack", "counter_attack_sr", "strike rate just after a partner gets out", 1],
   boundary_dependency: ["Boundary Dependency", "bdr_pct", "% of runs from boundaries", 1],
   dot_avoidance: ["Dot-Ball Avoidance", "dots_avoided_per100", "dots avoided per 100 balls vs average", 1],
-  pace_spin: ["Pace vs Spin", "spin_edge", "runs / 100 balls better v spin than pace", 1],
-  finisher: ["Finisher Index", "above_per100", "runs / 100 balls above avg, chase overs 17-20", 1],
-  hand_split: ["Left vs Right", "left_edge", "runs / 100 saved, left-handers v right", 1],
-  wicket_quality: ["Wicket Quality", "wicket_quality", "avg skill of batters dismissed", 3],
-  crease_longevity: ["Crease Longevity", "longevity_index", "balls per dismissal vs cohort", 2],
-  slow_start_cost: ["Slow-Start Cost", "slow_start_cost", "career SR − first-20-ball SR", 1],
+  pace_spin: ["Pace vs Spin", "spin_edge", "runs per 100 balls better against spin than pace", 1],
+  finisher: ["Finisher Index", "above_per100", "runs per 100 balls above average in overs 17-20 of a chase", 1],
+  hand_split: ["Left vs Right", "left_edge", "runs per 100 balls saved against left- vs right-handers", 1],
+  wicket_quality: ["Wicket Quality", "wicket_quality", "average skill of the batters he dismisses", 3],
+  crease_longevity: ["Crease Longevity", "longevity_index", "balls per dismissal against similar batters", 2],
+  slow_start_cost: ["Slow-Start Cost", "slow_start_cost", "career strike rate minus his first-20-balls strike rate", 1],
   keeping: ["Wicketkeeping", "dismissals", "catches + stumpings + run-outs", 0],
   fielding: ["Fielding", "dismissals", "catches + run-outs", 0],
 };
@@ -211,7 +217,7 @@ function RoleValue({
       <span className="text-xs text-muted">
         {now ? `career ${fmt(career, 1)} · ` : ""}
         {balls.toLocaleString()} balls
-        {parts ? ` · economy ${fmtSigned(parts[0], 1)}, wickets ${fmtSigned(parts[1], 1)}` : ""}
+        {parts ? ` · ${fmtSigned(parts[0], 1)} from economy, ${fmtSigned(parts[1], 1)} from wickets` : ""}
       </span>
     </span>
   );
@@ -296,8 +302,16 @@ function Identity({
             {tax.batting_hand && <Badge>{tax.batting_hand}-hand bat</Badge>}
             {tax.country && <Badge>{tax.country}</Badge>}
             {idn?.team && <Badge tone="gold">{idn.team}</Badge>}
-            {idn?.capped === true && <Badge tone="accent">capped</Badge>}
-            {idn?.capped === false && <Badge>uncapped</Badge>}
+            {idn?.capped === true && (
+              <Term title="Capped" tip="Has played international cricket for his country.">
+                <Badge tone="accent">capped</Badge>
+              </Term>
+            )}
+            {idn?.capped === false && (
+              <Term k="uncapped">
+                <Badge>uncapped</Badge>
+              </Term>
+            )}
             {idn?.captaincy?.ipl?.[0] && (
               <span title="IPL captaincy (Wikipedia)"><Badge tone="gold">
                 IPL captain {idn.captaincy.ipl[0].team} {idn.captaincy.ipl[0].from}
@@ -352,7 +366,7 @@ function Identity({
               )}
             </InfoTip>
           )}
-          <Badge>id {profile.cricsheet_id}</Badge>
+          <span title="This player's id in Cricsheet, the open ball-by-ball source"><Badge>Cricsheet id {profile.cricsheet_id}</Badge></span>
         </div>
       </div>
       <div className="flex flex-wrap items-center gap-2">
@@ -481,7 +495,7 @@ export function PlayerProfile() {
       <PageTitle
         title="Player profile"
         icon={<UserSearch className="h-6 w-6" />}
-        desc="A full dossier per player: four Bayesian skill axes with their uncertainty, career totals, the novel metrics, how they get out, and their closest stylistic twins."
+        desc="A full dossier per player: four skill ratings with how sure each is, career totals, the context metrics, how they get out, and their closest stylistic twins."
       />
 
       <div className="mb-6 max-w-md">
@@ -551,7 +565,7 @@ export function PlayerProfile() {
           {/* novel metrics */}
           {metrics && Object.entries(metrics).some(([, m]) => m && Object.keys(m).length > 0) && (
             <div>
-              <h3 className="mb-3 text-sm font-semibold text-fg">Novel metrics</h3>
+              <h3 className="mb-3 text-sm font-semibold text-fg">Context metrics</h3>
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                 {Object.entries(metrics).map(([slug, m]) => (m ? <MetricCard key={slug} slug={slug} m={m} /> : null))}
               </div>
@@ -588,7 +602,7 @@ export function PlayerProfile() {
               </div>
             </Card>
             <Card>
-              <CardHeader title="Graph cohort" subtitle="Players who faced the same bowlers / shared a side" />
+              <CardHeader title="Faced the same bowlers" subtitle="Batters who faced the most of the same bowlers: their numbers compare most fairly with his" />
               <div className="p-3">
                 <CohortList rows={cohorts?.co_faced ?? []} label="Faced the same bowlers" keyField="shared_bowlers" byName={byName} byId={byId} onPick={(c) => navigate(`/player?cid=${c}`)} />
               </div>
@@ -770,7 +784,7 @@ function CohortList({
             className="flex w-full items-center justify-between rounded-md px-2 py-1.5 text-sm hover:bg-surface disabled:opacity-60"
           >
             <span className="text-fg">{displayName(row ?? { name })}</span>
-            <span className="stat-num text-xs text-muted">{String(r[keyField] ?? r.shared_bowlers ?? r.shared_batters ?? "")} shared</span>
+            <span className="stat-num text-xs text-muted">{String(r[keyField] ?? r.shared_bowlers ?? r.shared_batters ?? "")} {r.shared_batters != null && r.shared_bowlers == null ? "batters" : "bowlers"} in common</span>
           </button>
         );
       })}

@@ -34,8 +34,8 @@ st.caption(
 
 PHASES = {
     "powerplay": "Powerplay (overs 1–6)",
-    "middle": "Middle (overs 7–15)",
-    "death": "Death (overs 16–20)",
+    "middle": "Middle (overs 7–16)",
+    "death": "Death (overs 17–20)",
 }
 
 

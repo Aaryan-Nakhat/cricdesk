@@ -92,9 +92,9 @@ METRICS: list[MetricDef] = [
                 "ngi_per_match", "Win chance added / match", 1, primary=True, bar=True, fmt="pct"
             ),
             Column("ngi_total", "Wins added (career)", 1),
-            Column("ngi_batting", "…from batting", 1),
-            Column("ngi_bowling", "…from bowling", 1),
-            Column("ngi_fielding", "…from fielding", 1),
+            Column("ngi_batting", "From batting", 1),
+            Column("ngi_bowling", "From bowling", 1),
+            Column("ngi_fielding", "From fielding", 1),
             Column("matches", "Matches", 0),
         ],
     ),
@@ -128,10 +128,12 @@ METRICS: list[MetricDef] = [
         higher_is_better=True,
         columns=[
             Column("batter", "Batter"),
-            Column("pressure_sr_per_100_balls", "Pressure SR", 1, primary=True, bar=True),
-            Column("pressure_runs", "Pressure runs", 0),
-            Column("pressure_balls", "Pressure balls", 0),
-            Column("pct_balls_under_pressure", "% balls", 1),
+            Column(
+                "pressure_sr_per_100_balls", "Strike rate under pressure", 1, primary=True, bar=True
+            ),
+            Column("pressure_runs", "Runs under pressure", 0),
+            Column("pressure_balls", "Balls under pressure", 0),
+            Column("pct_balls_under_pressure", "Share of chase balls", 1),
         ],
     ),
     MetricDef(
@@ -165,9 +167,9 @@ METRICS: list[MetricDef] = [
         higher_is_better=True,
         columns=[
             Column("batter", "Batter"),
-            Column("early_sr", "Early SR (balls 1–10)", 1, primary=True, bar=True),
-            Column("curve", "Innings curve (0–5 → 51+)"),
-            Column("peak_sr", "Peak SR", 1),
+            Column("early_sr", "Strike rate, balls 1–10", 1, primary=True, bar=True),
+            Column("curve", "Strike rate through the innings"),
+            Column("peak_sr", "Best stage strike rate", 1),
             Column("balls", "Balls", 0),
         ],
     ),
@@ -198,9 +200,11 @@ METRICS: list[MetricDef] = [
         higher_is_better=True,
         columns=[
             Column("batter", "Batter"),
-            Column("runs_per_6_after_dot", "Runs / 6 after dot", 2, primary=True, bar=True),
+            Column(
+                "runs_per_6_after_dot", "Runs in 6 balls after a dot", 2, primary=True, bar=True
+            ),
             Column("dots_faced", "Dots faced", 0),
-            Column("runs_in_following", "Runs after", 0),
+            Column("runs_in_following", "Runs after dots", 0),
         ],
     ),
     MetricDef(
@@ -230,7 +234,9 @@ METRICS: list[MetricDef] = [
         higher_is_better=True,
         columns=[
             Column("batter", "Batter"),
-            Column("counter_attack_sr", "Counter SR", 1, primary=True, bar=True),
+            Column(
+                "counter_attack_sr", "Strike rate after a partner falls", 1, primary=True, bar=True
+            ),
             Column("runs_after_partner_wkt", "Runs", 0),
             Column("balls_after_partner_wkt", "Balls", 0),
         ],
@@ -266,8 +272,8 @@ METRICS: list[MetricDef] = [
             Column("batter", "Batter"),
             Column("bdr_pct", "Boundary %", 1, primary=True, bar=True),
             Column("boundary_runs", "Boundary runs", 0),
-            Column("fours", "4s", 0),
-            Column("sixes", "6s", 0),
+            Column("fours", "Fours", 0),
+            Column("sixes", "Sixes", 0),
             Column("total_runs", "Total runs", 0),
         ],
     ),
@@ -284,10 +290,10 @@ METRICS: list[MetricDef] = [
         higher_is_better=True,
         columns=[
             Column("batter", "Batter"),
-            Column("dots_avoided_per100", "Dots avoided / 100", 1, primary=True, bar=True),
-            Column("dot_pct", "Dot %", 1),
-            Column("expected_dot_pct", "Average's dot %", 1),
-            Column("dots_avoided_raw", "Raw / 100", 1),
+            Column("dots_avoided_per100", "Dots avoided per 100 balls", 1, primary=True, bar=True),
+            Column("dot_pct", "His dot %", 1),
+            Column("expected_dot_pct", "Average batter's dot %", 1),
+            Column("dots_avoided_raw", "Unadjusted per 100", 1),
             Column("balls", "Balls", 0),
         ],
     ),
@@ -304,11 +310,11 @@ METRICS: list[MetricDef] = [
         higher_is_better=True,
         columns=[
             Column("batter", "Batter"),
-            Column("spin_edge", "Spin edge / 100", 1, primary=True, bar=True),
-            Column("above_vs_spin", "vs spin / 100", 1),
-            Column("above_vs_pace", "vs pace / 100", 1),
-            Column("balls_spin", "Balls v spin", 0),
-            Column("balls_pace", "Balls v pace", 0),
+            Column("spin_edge", "Spin edge (per 100 balls)", 1, primary=True, bar=True),
+            Column("above_vs_spin", "Against spin (per 100)", 1),
+            Column("above_vs_pace", "Against pace (per 100)", 1),
+            Column("balls_spin", "Balls against spin", 0),
+            Column("balls_pace", "Balls against pace", 0),
         ],
     ),
     MetricDef(
@@ -324,11 +330,11 @@ METRICS: list[MetricDef] = [
         higher_is_better=True,
         columns=[
             Column("batter", "Batter"),
-            Column("above_per100", "Above avg / 100", 1, primary=True, bar=True),
+            Column("above_per100", "Above average (per 100 balls)", 1, primary=True, bar=True),
             Column("sr", "Strike rate", 1),
             Column("not_out_pct", "Not out %", 0),
             Column("innings", "Innings", 0),
-            Column("above_raw", "Raw / 100", 1),
+            Column("above_raw", "Unadjusted per 100", 1),
             Column("balls", "Balls", 0),
         ],
     ),
@@ -345,11 +351,11 @@ METRICS: list[MetricDef] = [
         higher_is_better=True,
         columns=[
             Column("bowler", "Bowler"),
-            Column("left_edge", "Left edge / 100", 1, primary=True, bar=True),
-            Column("saved_vs_left", "Saved v left / 100", 1),
-            Column("saved_vs_right", "Saved v right / 100", 1),
-            Column("balls_vs_left", "Balls v left", 0),
-            Column("balls_vs_right", "Balls v right", 0),
+            Column("left_edge", "Left-hander edge (per 100 balls)", 1, primary=True, bar=True),
+            Column("saved_vs_left", "Saved against left-handers (per 100)", 1),
+            Column("saved_vs_right", "Saved against right-handers (per 100)", 1),
+            Column("balls_vs_left", "Balls to left-handers", 0),
+            Column("balls_vs_right", "Balls to right-handers", 0),
         ],
     ),
     MetricDef(
@@ -382,7 +388,7 @@ METRICS: list[MetricDef] = [
             Column("bowler", "Bowler"),
             Column("wicket_quality", "Wicket quality", 3, primary=True, bar=True),
             Column("wickets", "Wickets", 0),
-            Column("opponents_seen", "Opponents", 0),
+            Column("opponents_seen", "Different batters out", 0),
         ],
     ),
     MetricDef(
@@ -413,8 +419,8 @@ METRICS: list[MetricDef] = [
         columns=[
             Column("batter", "Batter"),
             Column("longevity_index", "Longevity index", 3, primary=True, bar=True),
-            Column("avg_balls_per_dismissal", "Balls / dismissal", 1),
-            Column("cohort_avg", "Cohort avg", 1),
+            Column("avg_balls_per_dismissal", "Balls per dismissal", 1),
+            Column("cohort_avg", "Typical balls per dismissal", 1),
             Column("innings_count", "Innings", 0),
         ],
     ),
@@ -448,9 +454,9 @@ METRICS: list[MetricDef] = [
         columns=[
             Column("batter", "Batter"),
             Column("slow_start_cost", "Slow-start cost", 1, primary=True, bar=True),
-            Column("career_sr", "Career SR", 1),
-            Column("setting_sr", "Setting SR", 1),
-            Column("setting_balls", "Setting balls", 0),
+            Column("career_sr", "Career strike rate", 1),
+            Column("setting_sr", "Strike rate, first 20 balls", 1),
+            Column("setting_balls", "Balls in first 20s", 0),
         ],
     ),
     MetricDef(
@@ -490,7 +496,7 @@ METRICS: list[MetricDef] = [
             Column("catches", "Catches", 0),
             Column("stumpings", "Stumpings", 0),
             Column("runouts", "Run-outs", 0),
-            Column("matches_kept", "Matches kept", 0),
+            Column("matches_kept", "Matches keeping wicket", 0),
         ],
     ),
     MetricDef(

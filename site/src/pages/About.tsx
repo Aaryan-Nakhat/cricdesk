@@ -1,5 +1,6 @@
 import { BookOpen, Brain, Sigma, Network, Gavel, Database, Target, Activity, Scale, TrendingUp, ClipboardList } from "lucide-react";
 import { PageTitle, Card } from "@/components/ui";
+import { GLOSSARY } from "@/lib/glossary";
 
 interface Section {
   icon: React.ReactNode;
@@ -274,6 +275,19 @@ export function About() {
           </Card>
         ))}
       </div>
+
+      <Card className="mt-5 px-5 py-5">
+        <h3 className="text-base font-bold text-fg">Terms used on this site</h3>
+        <p className="mt-1 text-xs text-muted">The same explanations sit behind the (i) buttons beside each term on the other pages.</p>
+        <dl className="mt-3 grid grid-cols-1 gap-x-8 gap-y-2.5 text-sm md:grid-cols-2">
+          {Object.values(GLOSSARY).map((g) => (
+            <div key={g.title}>
+              <dt className="font-semibold text-fg">{g.title}</dt>
+              <dd className="leading-relaxed text-muted">{g.text}</dd>
+            </div>
+          ))}
+        </dl>
+      </Card>
 
       <Card className="mt-5 px-5 py-4 text-sm text-muted">
         CricDesk is open source. The full pipeline — ingestion, the NumPyro Bayesian model, the metrics,

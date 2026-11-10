@@ -347,13 +347,13 @@ export function StaleShareBadge({ share, note, className }: { share: number; not
   const pct = Math.round(100 * share);
   return (
     <span
-      title={`${pct}% of the evidence behind his rating comes from ${note}: that league's data has stopped updating, so this part may be out of date.`}
+      title={`${pct}% of the evidence behind his rating comes from ${note}: our ball-by-ball source for that domestic league stops there (SMAT = India's Syed Mushtaq Ali Trophy; CSA T20 = South Africa's domestic T20), so this part may be out of date.`}
       className={cn(
         "inline-flex shrink-0 items-center gap-1 rounded-md border border-gold/40 bg-gold/10 px-1.5 py-0.5 text-[10px] font-semibold text-gold",
         className,
       )}
     >
-      {`${note} · ${pct}% of rating`}
+      {`${pct}% of rating from ${note}`}
     </span>
   );
 }

@@ -14,7 +14,7 @@ import { useStore } from "@/lib/store";
 import { useAsync } from "@/lib/useAsync";
 import { getVenues } from "@/lib/data";
 import { Combobox } from "@/components/Combobox";
-import { PageTitle, Card, CardHeader, Spinner, Empty, StatTile, ErrorBox } from "@/components/ui";
+import { PageTitle, Card, CardHeader, Spinner, Empty, StatTile, ErrorBox, InfoTip } from "@/components/ui";
 import { useTheme } from "@/lib/theme";
 import { fmt } from "@/lib/utils";
 import { hasKey, useClearOnChange, useUrlId } from "@/lib/useUrlState";
@@ -124,14 +124,14 @@ export function Venues() {
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
               {recentFirst && (
                 <StatTile
-                  label={`1st innings par, ${seasonSpan}`}
+                  label={`1st innings average, ${seasonSpan}`}
                   value={fmt(Number(recentFirst.avg_runs), 0)}
                   hint={`last ${recentSeasons.length} seasons · ${recentFirst.innings_count} innings`}
                 />
               )}
               {recentSecond && (
                 <StatTile
-                  label={`2nd innings avg, ${seasonSpan}`}
+                  label={`2nd innings average, ${seasonSpan}`}
                   value={fmt(Number(recentSecond.avg_runs), 0)}
                   hint={`last ${recentSeasons.length} seasons · ${recentSecond.innings_count} innings`}
                 />
@@ -141,16 +141,16 @@ export function Venues() {
           {/* all-time headline tiles */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {first && (
-              <StatTile label="1st innings avg (all-time)" value={fmt(Number(first.avg_runs), 0)} hint={`${first.innings_count} innings`} />
+              <StatTile label="1st innings average (all-time)" value={fmt(Number(first.avg_runs), 0)} hint={`${first.innings_count} innings`} />
             )}
             {second && (
-              <StatTile label="2nd innings avg (all-time)" value={fmt(Number(second.avg_runs), 0)} hint={`${second.innings_count} innings`} />
+              <StatTile label="2nd innings average (all-time)" value={fmt(Number(second.avg_runs), 0)} hint={`${second.innings_count} innings`} />
             )}
             {firstWinPct !== null && (
-              <StatTile label="Bat-first win %" value={`${firstWinPct.toFixed(0)}%`} hint={`${chase!.decided_matches} decided`} />
+              <StatTile label="Bat-first win %" value={`${firstWinPct.toFixed(0)}%`} hint={`of ${chase!.decided_matches} matches with a result`} />
             )}
             {firstWinPct !== null && (
-              <StatTile label="Chase win %" value={`${(100 - firstWinPct).toFixed(0)}%`} hint="2nd-innings team" />
+              <StatTile label="Chase win %" value={`${(100 - firstWinPct).toFixed(0)}%`} hint="the side batting second" />
             )}
           </div>
 
@@ -204,11 +204,16 @@ export function Venues() {
                 <table className="w-full border-collapse">
                   <thead>
                     <tr>
-                      <th className="th">Innings</th>
-                      <th className="th text-right">Sample</th>
-                      <th className="th text-right">Avg runs</th>
-                      <th className="th text-right">Median</th>
-                      <th className="th text-right">Avg wkts</th>
+                      <th className="th">Batting</th>
+                      <th className="th text-right">Innings</th>
+                      <th className="th text-right">Average score</th>
+                      <th className="th text-right">
+                        <span className="inline-flex items-center gap-1">
+                          Median score
+                          <InfoTip title="Median score">The middle score: half the innings here ended above it, half below. Less pulled by a few huge totals than the average.</InfoTip>
+                        </span>
+                      </th>
+                      <th className="th text-right">Average wickets lost</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -237,8 +242,8 @@ export function Venues() {
                     <tr>
                       <th className="th">Season</th>
                       <th className="th text-right">Matches</th>
-                      <th className="th text-right">1st innings</th>
-                      <th className="th text-right">2nd innings</th>
+                      <th className="th text-right">1st innings average</th>
+                      <th className="th text-right">2nd innings average</th>
                     </tr>
                   </thead>
                   <tbody>

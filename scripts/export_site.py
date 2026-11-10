@@ -1316,7 +1316,7 @@ CAPTAIN_KEYS = ("captain_ipl_last", "captain_ipl_seasons", "captain_intl_2y", "c
 
 # ---- Keep or release (retention calculator) -----------------------------------------------------
 
-# A death bowler bowls in the death overs (16-20) in at least this share of the matches he bowls in,
+# A death bowler bowls in the death overs (17-20) in at least this share of the matches he bowls in,
 # with at least KEEP_DEATH_MIN_BALLS death balls, across every auction-pool league, over the recent
 # window (player_master.RECENT_YEARS before the pool's newest match): a career count kept tagging
 # bowlers who no longer bowl at the death, or barely bowl at all after an injury. "Most of his

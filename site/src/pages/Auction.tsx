@@ -19,6 +19,7 @@ import {
 import { PageTitle, Card, CardHeader, Spinner, Badge, Empty, InfoTip, Collapsible, ErrorBox, StaleBadge, StaleShareBadge } from "@/components/ui";
 import { STALE_REASON_MIN, miniInputs } from "@/lib/keep";
 import { cn, fmt, methodologyUrl, profilePath } from "@/lib/utils";
+import { Term } from "@/components/Term";
 import { leagueShort, translatedAt, type LeagueRegistry } from "@/lib/leagues";
 
 /** "BBL, SA20 & CPL" */
@@ -77,7 +78,7 @@ function AuctionMath() {
         </p>
 
         <div>
-          <div className="mb-2 text-xs font-bold uppercase tracking-wider text-accent">
+          <div className="mb-2 text-sm font-semibold text-accent">
             Part 1 · Player → crore price
           </div>
           <div className="space-y-3">
@@ -108,7 +109,7 @@ function AuctionMath() {
         </div>
 
         <div>
-          <div className="mb-2 text-xs font-bold uppercase tracking-wider text-accent">
+          <div className="mb-2 text-sm font-semibold text-accent">
             Part 2 · Who's in the pool
           </div>
           <p className="text-sm leading-relaxed text-muted">
@@ -129,7 +130,7 @@ function AuctionMath() {
         </div>
 
         <div>
-          <div className="mb-2 text-xs font-bold uppercase tracking-wider text-accent">
+          <div className="mb-2 text-sm font-semibold text-accent">
             Part 3 · Retentions, then the auction
           </div>
           <p className="mb-2 text-sm leading-relaxed text-muted">
@@ -188,7 +189,7 @@ const ROLE_TONE: Record<string, "accent" | "willow" | "muted" | "ball"> = {
 };
 
 function NumberField({ label, value, onChange, min = 0, max = 999, step = 1, suffix }: {
-  label: string; value: number; onChange: (v: number) => void; min?: number; max?: number; step?: number; suffix?: string;
+  label: React.ReactNode; value: number; onChange: (v: number) => void; min?: number; max?: number; step?: number; suffix?: string;
 }) {
   // keep what's typed while editing; clamp to [min, max] when the field is left (no NaN, no 0 trials)
   const [text, setText] = useState(String(value));
@@ -201,7 +202,7 @@ function NumberField({ label, value, onChange, min = 0, max = 999, step = 1, suf
   };
   return (
     <label className="block">
-      <span className="mb-1 block text-xs font-medium text-muted">{label}</span>
+      <span className="mb-1 flex items-center text-xs font-medium text-muted">{label}</span>
       <div className="flex items-center gap-2">
         <input type="number" className="input" value={text} min={min} max={max} step={step}
           onChange={(e) => setText(e.target.value)}
@@ -243,7 +244,7 @@ export function Auction() {
       <PageTitle
         title="Auction room"
         icon={<Gavel className="h-6 w-6" />}
-        desc="Simulate the real IPL auction over ACTIVE players. Each franchise first RETAINS its core (Mega = ~5 keepers, the real 2025 lists; Mini = Keep or release's default plan, each team at its real purse left) — editable below — then the ten teams bid for everyone else by a demand model fitted on real auctions (each team's squad, overseas places and purse at every lot), hundreds of times, so you see who lands each remaining star and how each squad shapes up."
+        desc="Simulate the real IPL auction over active players. Each franchise first retains its core (mega auction = about 5 kept players each, the real 2025 lists; mini auction = Keep or release's default plan, each team at its real purse left) — editable below — then the ten teams bid for everyone else by a demand model fitted on real auctions (each team's squad, overseas places and purse at every lot), hundreds of times, so you see who lands each remaining star and how each squad shapes up."
       />
 
       {/* what is this for */}
@@ -484,7 +485,7 @@ function Simulate({
           <InfoTip title="Mega vs Mini">
             <div className="space-y-1.5">
               <div><b className="text-fg">Mega</b>: {MODE_BLURB.mega} Defaults to the <b>real 2025 retention lists</b>.</div>
-              <div><b className="text-fg">Mini</b>: {MODE_BLURB.mini} Defaults to each team's top 18 by value (squad already paid for — they bid a small leftover purse).</div>
+              <div><b className="text-fg">Mini</b>: {MODE_BLURB.mini} Defaults to Keep or release's default plan: each team keeps the players it likely keeps and bids with its real purse left.</div>
               <div className="text-muted/80">Retentions are <b>editable</b> below — they lock those players and draw their cost from the purse before bidding.</div>
             </div>
           </InfoTip>
@@ -508,7 +509,7 @@ function Simulate({
         {/* editable retentions */}
         <div className="mb-2 mt-5 flex items-center gap-2 text-sm font-semibold text-fg">
           <Users className="h-4 w-4 text-accent" /> Retentions
-          <span className="text-xs font-normal text-muted">— click ✕ to release, or add from the roster; purse drops by each cost</span>
+          <span className="text-xs font-normal text-muted">— the number beside each name is what keeping him takes from the purse (cr); click ✕ to release him, or add from the roster</span>
         </div>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
           {teams.map((t) => {
@@ -521,7 +522,7 @@ function Simulate({
               <div key={t.team} className="rounded-lg border border-border bg-surface/50 p-2.5">
                 <div className="mb-1.5 flex items-baseline justify-between">
                   <span className="text-xs font-bold text-fg">{t.team}</span>
-                  <span className="stat-num text-[11px] text-muted">{ids.length} · {fmt(cost, 0)}cr · {overs} o/s</span>
+                  <span className="text-[11px] text-muted">{ids.length} kept · {fmt(cost, 0)} cr · {overs} overseas</span>
                 </div>
                 <div className="flex flex-wrap gap-1">
                   {ids.length === 0 && <span className="text-[11px] text-muted">none</span>}
@@ -543,7 +544,7 @@ function Simulate({
                 >
                   <option value="" className="bg-card">+ add player…</option>
                   {addable.map((p) => (
-                    <option key={p.cricsheet_id} value={p.cricsheet_id} className="bg-card">{nm(p)} ({fmt(p.projected_value, 0)}cr)</option>
+                    <option key={p.cricsheet_id} value={p.cricsheet_id} className="bg-card">{nm(p)} (price {fmt(p.projected_value, 0)} cr)</option>
                   ))}
                 </select>
               </div>
@@ -552,10 +553,10 @@ function Simulate({
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <NumberField label="Purse / team" value={purse} onChange={setPurse} min={10} max={500} step={5} suffix="cr" />
-          <NumberField label="Squad cap" value={squadSize} onChange={setSquadSize} min={20} max={25} />
-          <NumberField label="Overseas cap" value={overseasCap} onChange={setOverseasCap} min={0} max={11} />
-          <NumberField label="Trials" value={trials} onChange={setTrials} min={50} max={1000} step={50} />
+          <NumberField label={<Term k="purse">Purse per team</Term>} value={purse} onChange={setPurse} min={10} max={500} step={5} suffix="cr" />
+          <NumberField label="Max squad size" value={squadSize} onChange={setSquadSize} min={20} max={25} />
+          <NumberField label={<Term k="overseas">Max overseas players</Term>} value={overseasCap} onChange={setOverseasCap} min={0} max={11} />
+          <NumberField label={<Term title="Simulated auctions" tip="How many times the whole auction is replayed. Each replay differs (how hot each player is on the day, each team's taste), and the results average over them: more replays, steadier numbers, slower run.">Simulated auctions</Term>} value={trials} onChange={setTrials} min={50} max={1000} step={50} />
         </div>
         <button onClick={run} disabled={running} className="btn btn-accent mt-4">
           <Dices className={cn("h-4 w-4", running && "animate-spin")} />
@@ -576,11 +577,11 @@ function Simulate({
             <thead>
               <tr>
                 <th className="th">Team</th>
-                <th className="th text-right">Retained</th>
+                <th className="th text-right">Kept</th>
                 <th className="th text-right">Bought</th>
-                <th className="th text-right">Auction spend</th>
-                <th className="th text-right">Squad value</th>
-                <th className="th text-right">Overseas</th>
+                <th className="th text-right">Spent at auction (cr)</th>
+                <th className="th text-right"><Term title="Squad worth" tip="The market prices of everyone kept and bought, added up (crore), averaged over the simulated auctions: a rough measure of how strong the squad ends up. The table is sorted by it.">Squad worth (cr)</Term></th>
+                <th className="th text-right">Overseas players</th>
               </tr>
             </thead>
             <tbody>
@@ -589,7 +590,7 @@ function Simulate({
                   <td className="td font-bold text-fg">{t.team}</td>
                   <td className="td stat-num text-right text-muted">{t.retained}</td>
                   <td className="td stat-num text-right">{Math.round(t.avgBought)}</td>
-                  <td className="td stat-num text-right">{fmt(t.avgSpend, 1)} cr</td>
+                  <td className="td stat-num text-right">{fmt(t.avgSpend, 1)}</td>
                   <td className="td stat-num text-right text-accent-glow">{fmt(t.avgValue, 1)}</td>
                   <td className="td stat-num text-right">{Math.round(t.avgOverseas)}</td>
                 </tr>
@@ -601,16 +602,16 @@ function Simulate({
 
       {/* marquee battles */}
       <Card className="overflow-hidden">
-        <CardHeader title="Who lands the marquee names" subtitle="Win share across the simulated auctions" />
+        <CardHeader title="Who lands the marquee names" subtitle="For each top player: the teams that bought him, with the share of simulated auctions each one did" />
         <div className="overflow-auto" style={{ maxHeight: "50vh" }}>
           <table className="w-full border-collapse">
             <thead>
               <tr>
                 <th className="th">Player</th>
                 <th className="th">Role</th>
-                <th className="th text-right">Value</th>
-                <th className="th text-right" title="The chance he plays a match when in a squad (P(plays))">Plays</th>
-                <th className="th">Most likely landing spot</th>
+                <th className="th text-right"><Term k="market_price">Price (cr)</Term></th>
+                <th className="th text-right"><Term title="Plays" tip="The chance he plays a match when he is in a squad, fitted on real IPL XIs (from where he ranks in his squad, overseas places, experience, age and last season). Green 75% and up, red under 45%. Hover a figure for his last IPL season and age.">Plays</Term></th>
+                <th className="th">Bought by (share of auctions)</th>
               </tr>
             </thead>
             <tbody>
@@ -623,7 +624,7 @@ function Simulate({
                   <td className="td"><Badge tone={ROLE_TONE[player.role]}>{player.role.replace("_", "-")}</Badge></td>
                   <td className="td stat-num text-right">{fmt(player.projected_value, 1)}</td>
                   <td className="td text-right">{relCell(player.cricsheet_id)}</td>
-                  <td className="td">
+                  <td className="td whitespace-normal">
                     <span className="flex flex-wrap gap-1.5">
                       {winners.length === 0 ? <span className="text-xs text-muted">unsold</span> : winners.map((w) => (
                         <span key={w.team} className="inline-flex items-center gap-1 rounded-md border border-border bg-surface px-1.5 py-0.5 text-xs">
@@ -667,11 +668,11 @@ function Simulate({
                       <tr>
                         <th className="th">Player</th>
                         <th className="th">Role</th>
-                        <th className="th text-right" title="The chance he plays a match when in a squad (P(plays))">Plays</th>
+                        <th className="th text-right"><Term title="Plays" tip="The chance he plays a match when he is in a squad, fitted on real IPL XIs (from where he ranks in his squad, overseas places, experience, age and last season). Green 75% and up, red under 45%. Hover a figure for his last IPL season and age.">Plays</Term></th>
                         <th className="th">Status</th>
-                        <th className="th text-right">Avg price</th>
-                        <th className="th text-right">Sold %</th>
-                        <th className="th">Where</th>
+                        <th className="th text-right">Average price (cr)</th>
+                        <th className="th text-right"><Term title="Sold in" tip="The share of simulated auctions in which he was sold; in the rest he went unsold.">Sold in</Term></th>
+                        <th className="th">Team (share of auctions)</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -694,7 +695,7 @@ function Simulate({
                               <Badge tone="accent">sold</Badge>
                             )}
                           </td>
-                          <td className="td stat-num text-right">{o.status === "unsold" ? "—" : `${fmt(o.avgPrice, 1)} cr`}</td>
+                          <td className="td stat-num text-right">{o.status === "unsold" ? "—" : fmt(o.avgPrice, 1)}</td>
                           <td className="td stat-num text-right">{o.status === "sold" ? `${o.soldPct.toFixed(0)}%` : "—"}</td>
                           <td className="td">
                             {o.status === "retained" ? (
@@ -731,7 +732,7 @@ function Simulate({
         <Card className="overflow-hidden">
           <CardHeader
             title="A representative squad"
-            subtitle="One sampled auction — retained core (locked) + auction buys"
+            subtitle="One sampled auction: the players kept (locked) plus what it bought"
             right={
               <select value={focus} onChange={(e) => setFocus(Number(e.target.value))} className="input w-auto cursor-pointer py-1 text-xs">
                 {result.sampleDraft.map((d, i) => (
@@ -742,7 +743,7 @@ function Simulate({
           />
           <div className="space-y-3 p-4">
             <div>
-              <div className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-muted">Retained ({draft.retained.length})</div>
+              <div className="mb-1.5 text-sm font-semibold text-muted">Kept ({draft.retained.length})</div>
               <div className="flex flex-wrap gap-2">
                 {draft.retained.length === 0 ? <span className="text-xs text-muted">none</span> : draft.retained.map((p) => (
                   <button key={p.cricsheet_id} onClick={() => navigate(linkFor(p.cricsheet_id))}
@@ -750,13 +751,13 @@ function Simulate({
                     <span className="text-accent-glow">{nm(p)}</span>
                     <Badge tone={ROLE_TONE[p.role]}>{p.role.replace("_", "-")}</Badge>
                     {p.is_overseas && <Plane className="h-3 w-3 text-willow" />}
-                    {p.captain && <span title={`Captained ${p.captain} last season`}><Badge tone="gold">C</Badge></span>}
+                    {p.captain && <span title={`Captained ${p.captain} last season`}><Badge tone="gold">Captain</Badge></span>}
                   </button>
                 ))}
               </div>
             </div>
             <div>
-              <div className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-muted">Bought ({draft.bought.length})</div>
+              <div className="mb-1.5 text-sm font-semibold text-muted">Bought ({draft.bought.length})</div>
               <div className="flex flex-wrap gap-2">
                 {draft.bought.length === 0 ? <span className="text-xs text-muted">no buys in this sample</span> : draft.bought.map((p) => (
                   <button key={p.cricsheet_id} onClick={() => navigate(linkFor(p.cricsheet_id))}
@@ -764,7 +765,7 @@ function Simulate({
                     <span className="text-fg">{nm(p)}</span>
                     <Badge tone={ROLE_TONE[p.role]}>{p.role.replace("_", "-")}</Badge>
                     {p.is_overseas && <Plane className="h-3 w-3 text-willow" />}
-                    {p.captain && <span title={`Captained ${p.captain} last season`}><Badge tone="gold">C</Badge></span>}
+                    {p.captain && <span title={`Captained ${p.captain} last season`}><Badge tone="gold">Captain</Badge></span>}
                   </button>
                 ))}
               </div>

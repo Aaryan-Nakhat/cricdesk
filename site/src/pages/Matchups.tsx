@@ -6,7 +6,7 @@ import { getMatchups, type Matchups as MatchupsData } from "@/lib/data";
 import { usePlayers } from "@/lib/usePlayers";
 import { Combobox } from "@/components/Combobox";
 import { DataTable, type Col } from "@/components/DataTable";
-import { PageTitle, Card, CardHeader, Spinner, Empty, StatTile, Badge, ErrorBox } from "@/components/ui";
+import { PageTitle, Card, CardHeader, Spinner, Empty, StatTile, Badge, ErrorBox, InfoTip } from "@/components/ui";
 import { fmt } from "@/lib/utils";
 import { useUrlId, useUrlNumber } from "@/lib/useUrlState";
 
@@ -16,17 +16,23 @@ const BAT_COLS: Col<Row>[] = [
   { key: "bowler", label: "Bowler", primary: false },
   { key: "balls", label: "Balls", align: "right", digits: 0 },
   { key: "runs", label: "Runs", align: "right", digits: 0 },
-  { key: "sr", label: "SR", align: "right", digits: 1, primary: true },
-  { key: "dot_pct", label: "Dot %", align: "right", digits: 1 },
-  { key: "outs", label: "Outs", align: "right", digits: 0 },
+  { key: "sr", label: "Strike rate", align: "right", digits: 1, primary: true,
+    info: <InfoTip title="Strike rate">His runs per 100 balls against this bowler: 150 means 15 runs every 10 balls.</InfoTip> },
+  { key: "dot_pct", label: "Dot %", align: "right", digits: 1,
+    info: <InfoTip title="Dot %">The share of these balls he scored nothing off the bat.</InfoTip> },
+  { key: "outs", label: "Times out", align: "right", digits: 0,
+    info: <InfoTip title="Times out">How often this bowler got him out (run outs are not the bowler’s, so they don’t count).</InfoTip> },
 ];
 const BOWL_COLS: Col<Row>[] = [
   { key: "batter", label: "Batter", primary: false },
   { key: "balls", label: "Balls", align: "right", digits: 0 },
   { key: "runs", label: "Runs", align: "right", digits: 0 },
-  { key: "sr", label: "SR conceded", align: "right", digits: 1, primary: true },
-  { key: "dot_pct", label: "Dot %", align: "right", digits: 1 },
-  { key: "outs", label: "Wkts", align: "right", digits: 0 },
+  { key: "sr", label: "Strike rate conceded", align: "right", digits: 1, primary: true,
+    info: <InfoTip title="Strike rate conceded">The batter's runs per 100 balls against him: lower is better for the bowler.</InfoTip> },
+  { key: "dot_pct", label: "Dot %", align: "right", digits: 1,
+    info: <InfoTip title="Dot %">The share of these balls the batter scored nothing off the bat.</InfoTip> },
+  { key: "outs", label: "Wickets", align: "right", digits: 0,
+    info: <InfoTip title="Wickets">How often he got this batter out.</InfoTip> },
 ];
 
 /** The opponent column shows the fan name (rows carry the scorecard name and the registry id). */
@@ -55,7 +61,7 @@ function Splits({ splits }: { splits: MatchupsData["splits"] }) {
     <Card>
       <CardHeader
         title="Pace vs spin"
-        subtitle="How this batter scores and survives against seam vs spin (career)"
+        subtitle="How this batter scores and survives against pace (seam) and spin, over his career"
         right={
           weaker && (
             <Badge tone="ball">
@@ -67,9 +73,9 @@ function Splits({ splits }: { splits: MatchupsData["splits"] }) {
       <div className="grid grid-cols-2 gap-3 p-4 sm:grid-cols-4">
         {seam && (
           <>
-            <StatTile label="vs Pace — SR" value={fmt(seam.sr, 1)} hint={`${seam.balls} balls`} />
+            <StatTile label="Strike rate v pace" value={fmt(seam.sr, 1)} hint={`${seam.balls} balls`} />
             <StatTile
-              label="vs Pace — gets out"
+              label="Out to pace"
               value={outEvery(seam)}
               hint={`${seam.outs} dismissals · out on ${fmt(seam.out_rate, 2)}% of balls faced`}
             />
@@ -77,9 +83,9 @@ function Splits({ splits }: { splits: MatchupsData["splits"] }) {
         )}
         {spin && (
           <>
-            <StatTile label="vs Spin — SR" value={fmt(spin.sr, 1)} hint={`${spin.balls} balls`} />
+            <StatTile label="Strike rate v spin" value={fmt(spin.sr, 1)} hint={`${spin.balls} balls`} />
             <StatTile
-              label="vs Spin — gets out"
+              label="Out to spin"
               value={outEvery(spin)}
               hint={`${spin.outs} dismissals · out on ${fmt(spin.out_rate, 2)}% of balls faced`}
             />
@@ -130,6 +136,7 @@ export function Matchups() {
         />
         <label className="flex items-center gap-2 text-sm text-muted">
           <span>Min balls</span>
+          <InfoTip title="Min balls">Hides head-to-heads with fewer balls than this: a handful of balls says little.</InfoTip>
           <input
             type="number"
             min={1}

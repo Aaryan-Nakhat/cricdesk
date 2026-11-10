@@ -20,6 +20,7 @@ import {
 import { Combobox } from "@/components/Combobox";
 import { PageTitle, Card, CardHeader, Spinner, Empty, Badge, Collapsible, ErrorBox, Segmented, StaleBadge } from "@/components/ui";
 import { fmt, profilePath } from "@/lib/utils";
+import { Term } from "@/components/Term";
 import { hasKey, useUrlId, useUrlParams } from "@/lib/useUrlState";
 
 const POS = {
@@ -81,6 +82,14 @@ function overseasNames(reg: LeagueRegistry | null): string {
 // `@/lib/scout` (mirrored bit-for-bit by the Python port) — single source of
 // truth across every surface.
 
+const STANDING_TIP = "Skill standing: his value for his role (batting for batters and keepers, bowling for bowlers, both for all-rounders) as a z-score among players of that role in his own competition. 0 is that competition's average, +1 is about the top sixth, +2 the top 2%. It lets a star in the domestic T20 line up with a star in the IPL.";
+const SIM_TIP = "How close his skill standing and type are to your pick's: 100% is a near twin. Only players of the same role, bowling type (seam or spin) and, by default, the same part of the batting order are compared.";
+const PRICE_TIP = "Estimated IPL auction price in crore (1 cr = 10 million rupees): the Auction room's market price, with his rating moved onto the IPL scale for his league and role.";
+const SAVE_TIP = "How much cheaper he is than your pick's estimated price, in crore.";
+const GEM_TIP = "Uncapped gem: an uncapped Indian player whose standing is +0.6 or more in his domestic competition although he has faced or bowled fewer balls than the median player there. A cheap punt on an under-used talent.";
+const SMAT_TIP = "Syed Mushtaq Ali Trophy: India's domestic T20 competition, where uncapped Indian players come from. Our ball-by-ball data for it ends in Dec 2024.";
+const DRAFT_TIP = "Puts him into the Auction room as a kept player for a team you choose, to see how the auction plays out with him.";
+
 function ScoutMath({ reg }: { reg: LeagueRegistry | null }) {
   return (
     <Collapsible title="How the scout works (plain English)" icon={<Network className="h-4 w-4" />}>
@@ -94,7 +103,7 @@ function ScoutMath({ reg }: { reg: LeagueRegistry | null }) {
         </p>
         <ul className="space-y-1.5">
           <li>• <b className="text-fg">IPL peers</b> — who else in the IPL is most like them.</li>
-          <li>• <b className="text-fg">Uncapped (SMAT)</b> — domestic Indian prospects of the same mould — the "next one".</li>
+          <li>• <b className="text-fg">Uncapped (SMAT)</b> — domestic Indian prospects of the same mould from the Syed Mushtaq Ali Trophy, India's domestic T20 — the "next one".</li>
           <li>• <b className="text-fg">Overseas</b> — {overseasNames(reg) || "overseas league"} players of the same mould.</li>
         </ul>
         <p>
@@ -190,15 +199,15 @@ function TierPanel({
                     )}
                   </span>
                   <Badge tone={sim > 0.8 ? "accent" : sim > 0.6 ? "willow" : "muted"}>
-                    {Math.round(sim * 100)}%
+                    {Math.round(sim * 100)}% alike
                   </Badge>
                 </div>
                 {/* line 2: meta (country · price · saving · draft) */}
                 <div className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 pl-6 text-[11px] text-muted">
                   {p.country && <span>{p.country}</span>}
                   {p.last_match_date && <span className="stat-num">{p.last_match_date.slice(0, 4)}</span>}
-                  <span className="stat-num">≈{fmt(price, 1)}cr</span>
-                  {saving > 0 && <span className="stat-num text-willow">save {fmt(saving, 1)}</span>}
+                  <span className="stat-num">about {fmt(price, 1)} cr</span>
+                  {saving > 0 && <span className="stat-num text-willow">saves {fmt(saving, 1)} cr</span>}
                   {draftable && inPool.has(p.cricsheet_id) && (
                     <button
                       onClick={() => navigate(`/auction?draft=${p.cricsheet_id}`)}
@@ -240,8 +249,14 @@ function GemsBoard({
             {stale && <StaleBadge asOf={stale} />}
           </span>
         }
-        subtitle="Uncapped SMAT prospects punching above their sample — high standing on below-median exposure (moneyball)"
+        subtitle="Uncapped Indian players in the Syed Mushtaq Ali Trophy (India's domestic T20) with a high standing from fewer balls than most: cheap punts on under-used talent"
       />
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 px-5 pt-3 text-xs text-muted">
+        <Term title="Standing" tip={STANDING_TIP}>standing</Term>
+        <Term title="Uncapped gem" tip={GEM_TIP}>why these are gems</Term>
+        <Term title="Estimated price" tip={PRICE_TIP}>about … cr</Term>
+        <Term title="Draft" tip={DRAFT_TIP}>Draft</Term>
+      </div>
       <div className="grid grid-cols-1 gap-x-4 p-2 sm:grid-cols-2">
         {gems.map((p, i) => (
           <div
@@ -264,7 +279,7 @@ function GemsBoard({
             <Badge tone="willow">standing {fmt(p.z, 2)}</Badge>
             <span className="text-[11px] text-muted">{p.balls} balls</span>
             <span className="stat-num ml-auto text-[11px] text-muted">
-              ≈{fmt(scoutPrice(p), 1)}cr
+              about {fmt(scoutPrice(p), 1)} cr
             </span>
             {inPool.has(p.cricsheet_id) ? (
               <button
@@ -387,7 +402,7 @@ export function Scout() {
       <PageTitle
         title="Scout"
         icon={<Network className="h-6 w-6" />}
-        desc={`Pick an active IPL player and find others of the same mould across every pool — IPL peers, uncapped Indian prospects (SMAT), and overseas options (${overseasNames(reg.data) || "overseas leagues"}) — with an estimated price, the saving vs your pick, and a one-click draft into the Auction room.`}
+        desc={`Pick an active IPL player and find others of the same mould across every pool — IPL peers, uncapped Indian prospects (from the Syed Mushtaq Ali Trophy, India's domestic T20), and overseas options (${overseasNames(reg.data) || "overseas leagues"}) — with an estimated price, the saving vs your pick, and a one-click draft into the Auction room.`}
       />
 
       <ScoutMath reg={reg.data} />
@@ -412,8 +427,8 @@ export function Scout() {
             )}
             {sel.batting_position && <Badge>{POS[sel.batting_position] ?? sel.batting_position}</Badge>}
             {sel.country && <Badge>{sel.country}</Badge>}
-            <span className="text-xs">standing {fmt(sel.z, 2)}</span>
-            {selPrice != null && <span className="text-xs">· ≈{fmt(selPrice, 1)}cr</span>}
+            <Term title="Standing" tip={STANDING_TIP}><span className="text-xs">standing {fmt(sel.z, 2)}</span></Term>
+            {selPrice != null && <Term title="Estimated price" tip={PRICE_TIP}><span className="text-xs">· about {fmt(selPrice, 1)} cr</span></Term>}
           </div>
         )}
       </div>
@@ -488,6 +503,16 @@ export function Scout() {
         <Empty>Pick an IPL player to scout look-alikes across IPL, SMAT &amp; overseas ({overseasNames(reg.data)}).</Empty>
       ) : (
         <div className="animate-fade-up">
+          <div className="mb-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 rounded-xl border border-border bg-surface/50 px-4 py-2.5 text-xs text-muted">
+            <span className="font-semibold text-fg">Reading a row:</span>
+            <Term title="% alike" tip={SIM_TIP}>% alike</Term>
+            <Term title="Estimated price" tip={PRICE_TIP}>about … cr</Term>
+            <Term title="Saving" tip={SAVE_TIP}>saves … cr</Term>
+            <Term title="Uncapped gem" tip={GEM_TIP}><Gem className="h-3 w-3 text-willow" /> gem</Term>
+            <Term title="SMAT" tip={SMAT_TIP}>SMAT</Term>
+            <Term title="Draft" tip={DRAFT_TIP}>Draft</Term>
+            <span>The year is his last match.</span>
+          </div>
           {empty.length > 0 && (
             <div className="mb-4 rounded-xl border border-border bg-surface/50 px-4 py-2.5 text-sm text-muted">
               No {countrySel === "same" ? `${sel.country} ` : countrySel === "overseas" ? "overseas " : ""}match of this

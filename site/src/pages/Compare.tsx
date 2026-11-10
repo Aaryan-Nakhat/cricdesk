@@ -53,17 +53,17 @@ const pctShow = (digits: number, suffix?: string) =>
   suffix ? (v: number) => `${fmt(v, digits)}${suffix}` : undefined;
 
 const CONTEXT: [string, string, string, number][] = [
-  ["pressure_runs", "pressure_sr_per_100_balls", "Pressure SR", 1],
-  ["counter_attack", "counter_attack_sr", "Counter-attack SR", 1],
+  ["pressure_runs", "pressure_sr_per_100_balls", "Strike rate under pressure", 1],
+  ["counter_attack", "counter_attack_sr", "Strike rate after a partner falls", 1],
   ["dot_ball_recovery", "runs_per_6_after_dot", "Dot-ball recovery", 2],
   ["boundary_dependency", "bdr_pct", "Boundary dependency %", 1],
   ["crease_longevity", "longevity_index", "Crease longevity", 2],
   ["slow_start_cost", "slow_start_cost", "Slow-start cost", 1],
   ["wicket_quality", "wicket_quality", "Wicket quality", 3],
-  ["dot_avoidance", "dots_avoided_per100", "Dots avoided / 100", 1],
-  ["pace_spin", "spin_edge", "Spin edge / 100", 1],
-  ["finisher", "above_per100", "Finisher / 100", 1],
-  ["hand_split", "left_edge", "Left edge / 100", 1],
+  ["dot_avoidance", "dots_avoided_per100", "Dots avoided per 100 balls", 1],
+  ["pace_spin", "spin_edge", "Spin edge (per 100 balls)", 1],
+  ["finisher", "above_per100", "Finisher: above average (per 100 balls)", 1],
+  ["hand_split", "left_edge", "Left-hander edge (per 100 balls)", 1],
 ];
 
 const ROWS: Row[] = [
@@ -93,6 +93,12 @@ const ROWS: Row[] = [
     hint: "a career total — grows with matches",
     digits: 1,
     better: "high",
+    info: (
+      <InfoTip title="Wins added (career)">
+        The career total of win chance added: every 1.0 is one whole win's worth. It grows with every match, so
+        compare players with similar numbers of matches.
+      </InfoTip>
+    ),
     get: (p) => met(p, "ngi", "ngi_total"),
   },
   { group: "Batting", label: "Runs", digits: 0, better: "high", get: (_p, st) => st.runs },

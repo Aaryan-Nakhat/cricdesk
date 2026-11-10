@@ -8,6 +8,7 @@ import { headToHead, rolesFor, type H2HRole } from "@/lib/headtohead";
 import { Combobox } from "@/components/Combobox";
 import { ErrorBox, PageTitle, Card, Spinner, Empty, Badge, Collapsible } from "@/components/ui";
 import { cn } from "@/lib/utils";
+import { Term } from "@/components/Term";
 import { useClearOnChange, useUrlId, useUrlState } from "@/lib/useUrlState";
 
 function H2HMath() {
@@ -28,7 +29,7 @@ function H2HMath() {
           batting and bowling.
         </p>
         <p>
-          <b>P(A better than B)</b> = how much of A's bell curve sits above B's. Big gap between two
+          <b>The chance A is better than B</b> = how much of A's bell curve sits above B's. Big gap between two
           confident estimates → near 100%. Small gap, or fuzzy estimates → near 50% (too close to
           call).
         </p>
@@ -100,7 +101,7 @@ export function HeadToHead() {
       <PageTitle
         title="Head-to-head"
         icon={<Swords className="h-6 w-6" />}
-        desc="Not just whose average is bigger — the probability that one player's true underlying skill exceeds the other's, straight from the Bayesian model's posterior (mean and uncertainty for both)."
+        desc="Not just whose average is bigger — the chance that one player's true underlying skill is higher than the other's, from the rating model's estimate of each player and how sure it is (few matches = less sure)."
       />
 
       <H2HMath />
@@ -181,15 +182,17 @@ export function HeadToHead() {
                 </div>
                 <div className="mt-3 space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted">Complete {ROLE_LABEL[result.role]} value (mean)</span>
+                    <Term k="value" className="text-muted">
+                      {ROLE_LABEL[result.role][0].toUpperCase() + ROLE_LABEL[result.role].slice(1)} value (runs per 100 balls)
+                    </Term>
                     <span className="stat-num font-semibold text-fg">
                       {side.axis.mean >= 0 ? "+" : ""}
-                      {side.axis.mean.toFixed(3)}
+                      {side.axis.mean.toFixed(1)}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted">Uncertainty (sd)</span>
-                    <span className="stat-num text-muted">±{side.axis.sd.toFixed(3)}</span>
+                    <Term k="value_range" className="text-muted">Uncertainty</Term>
+                    <span className="stat-num text-muted">±{side.axis.sd.toFixed(1)}</span>
                   </div>
                 </div>
               </Card>
@@ -197,10 +200,10 @@ export function HeadToHead() {
           </div>
 
           <p className="text-xs leading-relaxed text-muted">
-            The “complete {ROLE_LABEL[result.role]} value” combines {result.component} — variances add
-            because the axes are modelled separately. P(A&nbsp;better) is the normal CDF of the mean gap
-            divided by the combined uncertainty: a big gap between confident estimates moves the bar to the
-            edges; a small gap or fuzzy estimates keeps it near 50%.
+            The {ROLE_LABEL[result.role]} value combines {result.component}, and the two uncertainties add up
+            because each part is estimated separately. The chance that {nameA} is better is how much of his
+            range sits above {nameB}'s: a big gap between confident estimates moves the bar to the edges; a
+            small gap or wide ranges keep it near 50%.
           </p>
         </div>
       )}

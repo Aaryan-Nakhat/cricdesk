@@ -108,7 +108,7 @@ export function DataTable<T extends Record<string, unknown>>({
                       <button
                         type="button"
                         onClick={() => toggle(c.key)}
-                        className="select-none rounded uppercase tracking-wider hover:text-fg"
+                        className="select-none rounded hover:text-fg"
                         title={`Sort by ${c.label}`}
                       >
                         {inner}
@@ -167,10 +167,10 @@ export function DataTable<T extends Record<string, unknown>>({
                       {c.render ? (
                         c.render(row)
                       ) : isNum ? (
-                        <div className={cn(c.align === "right" ? "text-right" : "text-left")}>
+                        <div className={cn("flex flex-col gap-1", c.align === "right" ? "items-end text-right" : "items-start text-left")}>
                           <span>{c.fmtValue ? c.fmtValue(raw) : fmt(raw as number | string | null, c.digits ?? 2)}</span>
                           {frac !== null && (
-                            <div className="mt-1 h-1 w-full max-w-[120px] overflow-hidden rounded-full bg-border/50">
+                            <div className="h-1 w-[120px] max-w-full overflow-hidden rounded-full bg-border/50">
                               <div
                                 className="h-full rounded-full bg-grad"
                                 style={{ width: `${Math.max(2, frac * 100)}%` }}

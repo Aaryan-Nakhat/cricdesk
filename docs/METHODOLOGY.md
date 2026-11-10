@@ -407,8 +407,8 @@ opener who rarely gets out. CricDesk prices it from the ball-by-ball data
    | | 0–1 down | 2–3 down | 4–5 down | 6+ down |
    |---|---|---|---|---|
    | Powerplay (overs 1–6) | 13–14 | 12–13 | 17–18 | 15–18 |
-   | Middle (7–15) | 7–8 | 8 | 10–11 | 11–16 |
-   | Death (16–20) | 2.5 | 2 | 2.5 | 3–8 |
+   | Middle (7–16) | 7–8 | 8 | 10–11 | 11–16 |
+   | Death (17–20) | 2.5 | 2 | 2.5 | 3–8 |
 
    With 2 down it falls steadily from about 15 runs in the 1st over to 3 in the 16th and 0.3 in the 20th.
 2. **Where the player plays.** Each player's wicket cost is the average of `λ` over the states he actually
@@ -2809,7 +2809,7 @@ group stage and all of SMAT 2025-26 as missing) and are priced from the market (
    squad or overseas count over the cap (only after a flip), a purse overrun, or too little purse to reach
    18 players at 0.3 cr each. (`fit_to_rules` ⇄ `fitToRules`.)
 8. **Role gaps.** Tags: keeper (role), opener (batting position in the player master), death bowler (25%+ of
-   his legal balls in overs 16–20, 60+ such balls, every auction-pool league), spinner (bowling type), overseas.
+   his legal balls in overs 17–20, 60+ such balls, every auction-pool league), spinner (bowling type), overseas.
    All of them read the **last 3 years**, not the career (since 2026-10-27): the keeper needs recent
    stumpings, the opener opened in at least half his last 30 T20 innings, pooled or in any one league
    with 8+ of them (so Narine, who opens for KKR, counts; a bowler gets the tag when the ball data says

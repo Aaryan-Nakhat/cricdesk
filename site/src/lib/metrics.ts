@@ -13,6 +13,8 @@ export interface Column {
   bar?: boolean; // render an inline magnitude bar
   /** "pct": a 0–1 share shown as a signed percentage (0.097 → +9.7%). */
   fmt?: "pct";
+  /** Plain-words explanation shown as an (i) beside the column header. */
+  tip?: string;
 }
 
 /** Which way is good: higher, lower, or neither (a style, not a level). */
@@ -53,10 +55,10 @@ export const METRICS: MetricDef[] = [
     columns: [
       { key: "name", label: "Player" },
       { key: "ngi_per_match", label: "Win chance added / match", digits: 1, primary: true, bar: true, fmt: "pct" },
-      { key: "ngi_total", label: "Wins added (career)", digits: 1 },
-      { key: "ngi_batting", label: "…from batting", digits: 1 },
-      { key: "ngi_bowling", label: "…from bowling", digits: 1 },
-      { key: "ngi_fielding", label: "…from fielding", digits: 1 },
+      { key: "ngi_total", label: "Wins added (career)", tip: "The career total of win chance added: every 1.0 is one whole win's worth. It grows with every match, so compare players with similar numbers of matches.", digits: 1 },
+      { key: "ngi_batting", label: "From batting", tip: "The part of his wins added that came from his batting: his runs, less the cost of getting out.", digits: 1 },
+      { key: "ngi_bowling", label: "From bowling", tip: "The part that came from his bowling: wickets taken, less the runs and extras he gave away.", digits: 1 },
+      { key: "ngi_fielding", label: "From fielding", tip: "The part that came from fielding: 20% of each catch or stumping he took, and run outs he was involved in.", digits: 1 },
       { key: "matches", label: "Matches", digits: 0 },
     ],
   },
@@ -74,10 +76,10 @@ export const METRICS: MetricDef[] = [
     filters: ["minMatches", "activity", "role", "position", "country"],
     columns: [
       { key: "batter", label: "Batter" },
-      { key: "pressure_sr_per_100_balls", label: "Pressure SR", digits: 1, primary: true, bar: true },
-      { key: "pressure_runs", label: "Pressure runs", digits: 0 },
-      { key: "pressure_balls", label: "Pressure balls", digits: 0 },
-      { key: "pct_balls_under_pressure", label: "% balls", digits: 1 },
+      { key: "pressure_sr_per_100_balls", label: "Strike rate under pressure", digits: 1, primary: true, bar: true },
+      { key: "pressure_runs", label: "Runs under pressure", digits: 0 },
+      { key: "pressure_balls", label: "Balls under pressure", tip: "Chasing balls he faced when the required rate was above 1.5 times the usual at that ground, in that phase.", digits: 0 },
+      { key: "pct_balls_under_pressure", label: "Share of chase balls", tip: "How often he was actually put under that pressure: the share of his chasing balls that were pressure balls.", digits: 1 },
     ],
   },
   {
@@ -94,9 +96,9 @@ export const METRICS: MetricDef[] = [
     filters: ["minMatches", "activity", "role", "position", "country"],
     columns: [
       { key: "batter", label: "Batter" },
-      { key: "early_sr", label: "Early SR (balls 1–10)", digits: 1, primary: true, bar: true },
-      { key: "curve", label: "Innings curve (0–5 → 51+)" },
-      { key: "peak_sr", label: "Peak SR", digits: 1 },
+      { key: "early_sr", label: "Strike rate, balls 1–10", digits: 1, primary: true, bar: true },
+      { key: "curve", label: "Strike rate through the innings", tip: "Each bar is his strike rate at one stage of his innings: balls 0–5, 6–10, 11–20, 21–30, 31–50 and 51+, scaled to his own best. Hover for the numbers; a faint stub means too few balls." },
+      { key: "peak_sr", label: "Best stage strike rate", tip: "His highest strike rate in any one of those stages of the innings.", digits: 1 },
       { key: "balls", label: "Balls", digits: 0 },
     ],
   },
@@ -114,9 +116,9 @@ export const METRICS: MetricDef[] = [
     filters: ["minMatches", "activity", "role", "position", "country"],
     columns: [
       { key: "batter", label: "Batter" },
-      { key: "runs_per_6_after_dot", label: "Runs / 6 after dot", digits: 2, primary: true, bar: true },
+      { key: "runs_per_6_after_dot", label: "Runs in 6 balls after a dot", digits: 2, primary: true, bar: true },
       { key: "dots_faced", label: "Dots faced", digits: 0 },
-      { key: "runs_in_following", label: "Runs after", digits: 0 },
+      { key: "runs_in_following", label: "Runs after dots", tip: "His total runs on the balls that followed a dot ball.", digits: 0 },
     ],
   },
   {
@@ -133,9 +135,9 @@ export const METRICS: MetricDef[] = [
     filters: ["minMatches", "activity", "role", "position", "country"],
     columns: [
       { key: "batter", label: "Batter" },
-      { key: "counter_attack_sr", label: "Counter SR", digits: 1, primary: true, bar: true },
-      { key: "runs_after_partner_wkt", label: "Runs", digits: 0 },
-      { key: "balls_after_partner_wkt", label: "Balls", digits: 0 },
+      { key: "counter_attack_sr", label: "Strike rate after a partner falls", digits: 1, primary: true, bar: true },
+      { key: "runs_after_partner_wkt", label: "Runs", tip: "His runs on the 12 balls after each partner was out (balls he faced, already at the crease).", digits: 0 },
+      { key: "balls_after_partner_wkt", label: "Balls", tip: "The balls behind that strike rate: faced in the 12 balls after a partner's wicket.", digits: 0 },
     ],
   },
   {
@@ -154,8 +156,8 @@ export const METRICS: MetricDef[] = [
       { key: "batter", label: "Batter" },
       { key: "bdr_pct", label: "Boundary %", digits: 1, primary: true, bar: true },
       { key: "boundary_runs", label: "Boundary runs", digits: 0 },
-      { key: "fours", label: "4s", digits: 0 },
-      { key: "sixes", label: "6s", digits: 0 },
+      { key: "fours", label: "Fours", digits: 0 },
+      { key: "sixes", label: "Sixes", digits: 0 },
       { key: "total_runs", label: "Total runs", digits: 0 },
     ],
   },
@@ -173,10 +175,10 @@ export const METRICS: MetricDef[] = [
     filters: ["minMatches", "activity", "role", "position", "country"],
     columns: [
       { key: "batter", label: "Batter" },
-      { key: "dots_avoided_per100", label: "Dots avoided / 100", digits: 1, primary: true, bar: true },
-      { key: "dot_pct", label: "Dot %", digits: 1 },
-      { key: "expected_dot_pct", label: "Average's dot %", digits: 1 },
-      { key: "dots_avoided_raw", label: "Raw / 100", digits: 1 },
+      { key: "dots_avoided_per100", label: "Dots avoided per 100 balls", digits: 1, primary: true, bar: true },
+      { key: "dot_pct", label: "His dot %", tip: "The share of his legal balls with no run off the bat.", digits: 1 },
+      { key: "expected_dot_pct", label: "Average batter's dot %", tip: "The dot share an average batter would have on the same mix of powerplay, middle and death balls.", digits: 1 },
+      { key: "dots_avoided_raw", label: "Unadjusted per 100", tip: "The same figure before it is pulled toward the league average for a small sample.", digits: 1 },
       { key: "balls", label: "Balls", digits: 0 },
     ],
   },
@@ -194,11 +196,11 @@ export const METRICS: MetricDef[] = [
     filters: ["minMatches", "activity", "role", "position", "country"],
     columns: [
       { key: "batter", label: "Batter" },
-      { key: "spin_edge", label: "Spin edge / 100", digits: 1, primary: true, bar: true },
-      { key: "above_vs_spin", label: "vs spin / 100", digits: 1 },
-      { key: "above_vs_pace", label: "vs pace / 100", digits: 1 },
-      { key: "balls_spin", label: "Balls v spin", digits: 0 },
-      { key: "balls_pace", label: "Balls v pace", digits: 0 },
+      { key: "spin_edge", label: "Spin edge (per 100 balls)", digits: 1, primary: true, bar: true },
+      { key: "above_vs_spin", label: "Against spin (per 100)", tip: "Runs per 100 balls above (+) or below (−) the league against spin, in the same phases.", digits: 1 },
+      { key: "above_vs_pace", label: "Against pace (per 100)", tip: "Runs per 100 balls above (+) or below (−) the league against pace, in the same phases.", digits: 1 },
+      { key: "balls_spin", label: "Balls against spin", digits: 0 },
+      { key: "balls_pace", label: "Balls against pace", digits: 0 },
     ],
   },
   {
@@ -215,11 +217,11 @@ export const METRICS: MetricDef[] = [
     filters: ["minMatches", "activity", "role", "position", "country"],
     columns: [
       { key: "batter", label: "Batter" },
-      { key: "above_per100", label: "Above avg / 100", digits: 1, primary: true, bar: true },
+      { key: "above_per100", label: "Above average (per 100 balls)", digits: 1, primary: true, bar: true },
       { key: "sr", label: "Strike rate", digits: 1 },
-      { key: "not_out_pct", label: "Not out %", digits: 0 },
+      { key: "not_out_pct", label: "Not out %", tip: "The share of those chases (overs 17–20) in which he was still not out at the end.", digits: 0 },
       { key: "innings", label: "Innings", digits: 0 },
-      { key: "above_raw", label: "Raw / 100", digits: 1 },
+      { key: "above_raw", label: "Unadjusted per 100", tip: "The same figure before it is pulled toward the league average for a small sample.", digits: 1 },
       { key: "balls", label: "Balls", digits: 0 },
     ],
   },
@@ -237,11 +239,11 @@ export const METRICS: MetricDef[] = [
     filters: ["minMatches", "activity", "role", "bowling", "country"],
     columns: [
       { key: "bowler", label: "Bowler" },
-      { key: "left_edge", label: "Left edge / 100", digits: 1, primary: true, bar: true },
-      { key: "saved_vs_left", label: "Saved v left / 100", digits: 1 },
-      { key: "saved_vs_right", label: "Saved v right / 100", digits: 1 },
-      { key: "balls_vs_left", label: "Balls v left", digits: 0 },
-      { key: "balls_vs_right", label: "Balls v right", digits: 0 },
+      { key: "left_edge", label: "Left-hander edge (per 100 balls)", digits: 1, primary: true, bar: true },
+      { key: "saved_vs_left", label: "Saved against left-handers (per 100)", tip: "Runs per 100 balls he concedes below (+) or above (−) the league against left-handers, in the same phases.", digits: 1 },
+      { key: "saved_vs_right", label: "Saved against right-handers (per 100)", tip: "Runs per 100 balls he concedes below (+) or above (−) the league against right-handers, in the same phases.", digits: 1 },
+      { key: "balls_vs_left", label: "Balls to left-handers", digits: 0 },
+      { key: "balls_vs_right", label: "Balls to right-handers", digits: 0 },
     ],
   },
   {
@@ -260,7 +262,7 @@ export const METRICS: MetricDef[] = [
       { key: "bowler", label: "Bowler" },
       { key: "wicket_quality", label: "Wicket quality", digits: 3, primary: true, bar: true },
       { key: "wickets", label: "Wickets", digits: 0 },
-      { key: "opponents_seen", label: "Opponents", digits: 0 },
+      { key: "opponents_seen", label: "Different batters out", tip: "How many different batters he has dismissed: a sample-size check on the average.", digits: 0 },
     ],
   },
   {
@@ -278,8 +280,8 @@ export const METRICS: MetricDef[] = [
     columns: [
       { key: "batter", label: "Batter" },
       { key: "longevity_index", label: "Longevity index", digits: 3, primary: true, bar: true },
-      { key: "avg_balls_per_dismissal", label: "Balls / dismissal", digits: 1 },
-      { key: "cohort_avg", label: "Cohort avg", digits: 1 },
+      { key: "avg_balls_per_dismissal", label: "Balls per dismissal", digits: 1 },
+      { key: "cohort_avg", label: "Typical balls per dismissal", tip: "The average balls per dismissal of every batter on the board out at least 5 times: the 1.0 mark of the index.", digits: 1 },
       { key: "innings_count", label: "Innings", digits: 0 },
     ],
   },
@@ -298,9 +300,9 @@ export const METRICS: MetricDef[] = [
     columns: [
       { key: "batter", label: "Batter" },
       { key: "slow_start_cost", label: "Slow-start cost", digits: 1, primary: true, bar: true },
-      { key: "career_sr", label: "Career SR", digits: 1 },
-      { key: "setting_sr", label: "Setting SR", digits: 1 },
-      { key: "setting_balls", label: "Setting balls", digits: 0 },
+      { key: "career_sr", label: "Career strike rate", digits: 1 },
+      { key: "setting_sr", label: "Strike rate, first 20 balls", tip: "His strike rate over the first 20 balls of each innings, while getting set.", digits: 1 },
+      { key: "setting_balls", label: "Balls in first 20s", tip: "The balls behind that strike rate: those he faced among the first 20 of his innings.", digits: 0 },
     ],
   },
   {
@@ -321,7 +323,7 @@ export const METRICS: MetricDef[] = [
       { key: "catches", label: "Catches", digits: 0 },
       { key: "stumpings", label: "Stumpings", digits: 0 },
       { key: "runouts", label: "Run-outs", digits: 0 },
-      { key: "matches_kept", label: "Matches kept", digits: 0 },
+      { key: "matches_kept", label: "Matches keeping wicket", digits: 0 },
     ],
   },
   {

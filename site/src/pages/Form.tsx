@@ -11,7 +11,7 @@ import { DataTable, type Col } from "@/components/DataTable";
 import { FilterBar } from "@/components/FilterBar";
 import { applyFilters, smartFilters, defaultFiltersFor } from "@/lib/filters";
 import { useUrlFilters, useUrlState } from "@/lib/useUrlState";
-import { PageTitle, Card, Spinner, ErrorBox, Empty, Badge, StatTile, Segmented } from "@/components/ui";
+import { PageTitle, Card, Spinner, ErrorBox, Empty, Badge, StatTile, Segmented, InfoTip } from "@/components/ui";
 import { cn, fmtSigned } from "@/lib/utils";
 
 type Row = Record<string, unknown>;
@@ -20,6 +20,8 @@ type Row = Record<string, unknown>;
 // they're left out here (every other board is a rate or an index).
 // Form needs a "better" direction: the volume boards and the descriptive Boundary Dependency are left out.
 const FORM_METRICS = METRICS.filter((m) => m.slug !== "keeping" && m.slug !== "fielding" && m.direction !== "descriptive");
+
+const cap = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 
 const WINDOW_LABEL: Record<string, string> = {
   last1y: "last 12 months",
@@ -95,11 +97,20 @@ export function Form() {
 
   const cols: Col<Row>[] = [
     { key: "name", label: "Player", primary: false, render: (r: Row) => <span className="font-medium text-fg">{nameOf(String(r.name))}</span> },
-    { key: "career", label: "Career", align: "right", digits: 2, fmtValue: pcol.fmt ? (v) => fmtMetric(v, pcol) : undefined },
-    { key: "recent", label: WINDOW_LABEL[recentWin ?? ""] ?? "Recent", align: "right", digits: 2, fmtValue: pcol.fmt ? (v) => fmtMetric(v, pcol) : undefined },
+    { key: "career", label: "Career", align: "right", digits: 2, fmtValue: pcol.fmt ? (v) => fmtMetric(v, pcol) : undefined,
+      info: <InfoTip title="Career">{metric.name} over every match he has played in this league (all-time).</InfoTip> },
+    { key: "recent", label: cap(WINDOW_LABEL[recentWin ?? ""] ?? "Recent"), align: "right", digits: 2, fmtValue: pcol.fmt ? (v) => fmtMetric(v, pcol) : undefined,
+      info: <InfoTip title="Recent window">{metric.name} recomputed over only the matches in the {WINDOW_LABEL[recentWin ?? ""] ?? "recent window"} before the latest match.</InfoTip> },
     {
       key: "mv",
-      label: "Form Δ",
+      label: "Form change",
+      info: (
+        <InfoTip title="Form change">
+          Recent minus career, turned so that + always means better form (for a lower-is-better metric such as
+          Slow-Start Cost the sign is flipped). +0.5% on win chance added means he now adds half a point more per match
+          than his career average.
+        </InfoTip>
+      ),
       align: "right",
       digits: 2,
       primary: true,
@@ -124,7 +135,7 @@ export function Form() {
       <PageTitle
         title="Form board"
         icon={<TrendingUp className="h-6 w-6" />}
-        desc="Who's trending up and who's fading — each metric recomputed over the recent window and compared against the player's career baseline. Positive Δ means improving form (already direction-corrected for 'lower is better' metrics)."
+        desc="Who's trending up and who's fading — each metric recomputed over the recent window and compared against the player's career baseline. A positive form change means improving form (already turned round for 'lower is better' metrics)."
       />
 
       <div role="radiogroup" aria-label="Metric" className="mb-4 flex flex-wrap gap-2">
@@ -184,7 +195,7 @@ export function Form() {
                     {metric.name} — {WINDOW_LABEL[recentWin]} vs career
                   </h3>
                   <MetricInfo m={metric} />
-                  {!metric.higherIsBetter && <Badge tone="muted">lower is better → sign-flipped</Badge>}
+                  {!metric.higherIsBetter && <Badge tone="muted">lower is better, so the sign is flipped</Badge>}
                 </div>
                 <p className="mt-1 text-sm leading-relaxed text-muted">{metric.what}</p>
               </div>
@@ -193,10 +204,10 @@ export function Form() {
 
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             {riser && (
-              <StatTile label="Biggest riser" value={nameOf(String(riser.name))} hint={`${show(Number(riser.mv))} form Δ`} />
+              <StatTile label="Biggest riser" value={nameOf(String(riser.name))} hint={`${show(Number(riser.mv))} form change`} />
             )}
             {faller && (
-              <StatTile label="Biggest faller" value={nameOf(String(faller.name))} hint={`${show(Number(faller.mv))} form Δ`} />
+              <StatTile label="Biggest faller" value={nameOf(String(faller.name))} hint={`${show(Number(faller.mv))} form change`} />
             )}
           </div>
 

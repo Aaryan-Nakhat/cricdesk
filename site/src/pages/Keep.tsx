@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Scale, Calculator, Download, Link2, RotateCcw, Plane, ScrollText, AlertTriangle, Check, ClipboardList } from "lucide-react";
 import { useAsync } from "@/lib/useAsync";
 import { getAuctionPool, getKeep } from "@/lib/data";
-import { buildPool, PRICED_ON_TIP } from "@/lib/auction";
+import { buildPool } from "@/lib/auction";
 import {
   BORDER_BAND,
   DEFAULT_NEEDS,
@@ -29,6 +29,8 @@ import {
 import { useUrlParams, useUrlState } from "@/lib/useUrlState";
 import { PageTitle, Card, CardHeader, Spinner, Badge, Empty, InfoTip, Collapsible, ErrorBox, StatTile } from "@/components/ui";
 import { cn, profilePath } from "@/lib/utils";
+import { Term } from "@/components/Term";
+import { GLOSSARY } from "@/lib/glossary";
 
 type SortKey = "kept" | "should" | "surplus" | "price" | "onfield" | "outlook" | "salary" | "value" | "age" | "name";
 const SORTS: SortKey[] = ["kept", "should", "surplus", "price", "onfield", "outlook", "salary", "value", "age", "name"];
@@ -118,7 +120,7 @@ function HowItWorks({ data }: { data: KeepData }) {
           skill-only curve (4.03 × e^(0.0743 × cautious value) × role weight), shown for comparison only.
         </p>
         <pre className="overflow-auto rounded-lg border border-border bg-bg/60 px-3 py-2 font-mono text-xs leading-relaxed text-fg">{`market price = purse × e^(calibrated ln share of the purse)   (at least 0.3 cr)
-upper figure = the upper quartile of that (about 1.4 × for a 5 cr+ player,
+upper figure = the upper quartile (dearer quarter) of that (about 1.4 × for a 5 cr+ player,
                1.75 × at the median, up to 2.3 × for the cheapest)
 cost         = what keeping him takes from the purse: his salary, or for a 2025
                retention what releasing him would free (retention slabs)
@@ -141,7 +143,7 @@ P(kept)      = the chance a franchise keeps a player like him, from market price
           A player we can't price at all (too few balls, no market inputs) is Toss-up: scout him.
         </p>
         <p>
-          <b className="text-fg">Should they?</b> The call copies what franchises do, and in a mini year they
+          <b className="text-fg">Worth his cost?</b> The call copies what franchises do, and in a mini year they
           hardly weigh the cost: in the fitted model a dear retention looks about as likely as a cheap one. So
           this column asks the other question, from the market price alone: is he worth what keeping him
           costs? <Badge tone="willow">Yes</Badge> when players like him fetch at least that cost at auction
@@ -175,9 +177,9 @@ P(kept)      = the chance a franchise keeps a player like him, from market price
           he gets; a replacement-level player, 0, if you released none), respecting
           open slots and overseas room; a player who fills two gaps counts for both. A death bowler bowls{" "}
           {data.death_rule.match_share !== undefined ? (
-            <>in overs 16–20 in at least {Math.round(data.death_rule.match_share * 100)}% of the matches he bowls in</>
+            <>in overs 17–20 in at least {Math.round(data.death_rule.match_share * 100)}% of the matches he bowls in</>
           ) : (
-            <>{Math.round((data.death_rule.share ?? 0) * 100)}%+ of his balls in overs 16–20</>
+            <>{Math.round((data.death_rule.share ?? 0) * 100)}%+ of his balls in overs 17–20</>
           )}{" "}
           ({data.death_rule.min_balls}+ death balls, every league we have, last three years); an opener is tagged so in the player master; spinners by bowling type.
         </p>
@@ -380,12 +382,15 @@ function KeepCalculator({ data, pool }: { data: KeepData; pool: Parameters<typeo
   const check = data.purse_check.teams[team];
   const changes = data.changes.filter((c) => c.to === team || c.from === team || c.team === team);
   const unmatched = data.unmatched.filter((u) => u.team === team);
-  const SortTh = ({ k, children, className }: { k: SortKey; children: React.ReactNode; className?: string }) => (
+  const SortTh = ({ k, children, className, info }: { k: SortKey; children: React.ReactNode; className?: string; info?: React.ReactNode }) => (
     <th className={cn("th", className)}>
-      <button onClick={() => setSort(k)} className={cn("inline-flex items-center gap-1 hover:text-fg", sort === k && "text-accent-glow")}>
-        {children}
-        {sort === k && <span aria-hidden>{k === "name" ? "↑" : "↓"}</span>}
-      </button>
+      <span className={cn("inline-flex items-center gap-1", className?.includes("text-right") && "flex-row-reverse")}>
+        <button onClick={() => setSort(k)} className={cn("inline-flex items-center gap-1 hover:text-fg", sort === k && "text-accent-glow")}>
+          {children}
+          {sort === k && <span aria-hidden>{k === "name" ? "↑" : "↓"}</span>}
+        </button>
+        {info}
+      </span>
     </th>
   );
 
@@ -442,7 +447,7 @@ function KeepCalculator({ data, pool }: { data: KeepData; pool: Parameters<typeo
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <StatTile label="Purse left" value={`${cr(res.purse_left)} cr`} hint={`${cr(res.purse)} − ${cr(res.purse_charged)} for the kept players`} />
         <StatTile label="Kept / released" value={`${res.kept} / ${res.released}`} hint={`${res.overseas_kept} overseas kept · frees ${cr(res.salary_released)} cr`} />
-        <StatTile label="Slots open" value={`${res.slots_left}`} hint={`${res.overseas_slots_left} overseas · squad ${comp.rules.squad_min}–${comp.rules.squad_max}`} />
+        <StatTile label="Places open" value={`${res.slots_left}`} hint={`${res.overseas_slots_left} overseas · squad ${comp.rules.squad_min}–${comp.rules.squad_max}`} />
         <StatTile label="After filling gaps" value={`${cr(res.purse_after_replacements)} cr`} hint={(() => { const n = res.gaps.reduce((s, g) => s + g.picks.length, 0); return `${cr(res.replacement_cost)} cr on ${n} gap buy${n === 1 ? "" : "s"}`; })()} />
       </div>
       {res.warnings.length > 0 && (
@@ -461,34 +466,32 @@ function KeepCalculator({ data, pool }: { data: KeepData; pool: Parameters<typeo
             return res.players.length > Number(data.competition.rules.squad_max)
               ? `Everyone on the books before the deadline${repl ? `, ${repl} injury-replacement signing${repl === 1 ? "" : "s"} among them` : ""}: more than the ${data.competition.rules.squad_max}-player limit, which applies to the squad kept. `
               : "";
-          })()}Likely call = what franchises do with players like him. Should they? = is he worth what keeping him costs (Yes if he'd fetch at least that at auction, No if even the dearer quarter of players like him fetch less). Click a column to sort; Keep / Release flips our call (the purse and gaps update, and the link keeps it).`}
+          })()}Our call = what franchises do with players like him. Worth his cost? = would he fetch at least what keeping him costs at auction. Click a column to sort; Keep / Release flips our call (the purse and gaps update, and the link keeps it). Every (i) explains its term.`}
         />
-        <div className="overflow-auto">
-          <table className="w-full border-collapse">
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse [&_td]:px-2 [&_th]:px-2">
             <thead>
               <tr>
-                <SortTh k="name">Player</SortTh>
-                <SortTh k="age" className="text-right">Age</SortTh>
-                <SortTh k="salary" className="text-right">Salary</SortTh>
-                <SortTh k="value" className="text-right">
-                  Value
-                </SortTh>
-                <SortTh k="price" className="text-right">Market price</SortTh>
-                <SortTh k="onfield" className="text-right">On-field worth</SortTh>
-                <SortTh k="surplus" className="text-right">Surplus</SortTh>
-                <SortTh k="outlook" className="text-right">3-season outlook</SortTh>
-                <SortTh k="kept" className="text-right">Kept by franchises</SortTh>
-                <th className="th">Likely call</th>
-                <SortTh k="should">Should they?</SortTh>
-                <th className="th">Decision</th>
-                <th className="th">Why</th>
+                <SortTh k="name" info={<Term title="Player" tip={<>Role, age at the auction, and how he joined: {GLOSSARY.acquired.text} The plane marks an overseas player. A gold line says why he missed games last season.</>} />}>Player</SortTh>
+                <SortTh k="salary" className="text-right" info={<Term title="Salary" tip={<>His current IPL salary in crore. &quot;keep: X&quot; under it = {GLOSSARY.cost_to_keep.text.charAt(0).toLowerCase() + GLOSSARY.cost_to_keep.text.slice(1)}</>} />}>Salary (cr)</SortTh>
+                <SortTh k="value" className="text-right" info={<Term title="Value" tip={<>{GLOSSARY.value.text} The big number is his value for the coming season (career rating moved by age and recent seasons), ± how sure it is ({GLOSSARY.value_range.text.toLowerCase()}). Under it: his career rating and the IPL balls it rests on.</>} />}>Value</SortTh>
+                <SortTh k="price" className="text-right" info={<Term title="Market price" tip={<>{GLOSSARY.market_price.text} Under it: {GLOSSARY.pct_bought.text.charAt(0).toLowerCase() + GLOSSARY.pct_bought.text.slice(1)} The value the price model used and an older skill-only price are in the CSV.</>} />}>Market price (cr)</SortTh>
+                <SortTh k="outlook" className="text-right" info={<Term title="3-season outlook" tip={<>{GLOSSARY.forecast.text} Under it: the path, and the chance he is still a regular (plays most matches) in the last season. &quot;too little recent play&quot;: under 60 balls a season in his recent IPL seasons, so no forecast.</>} />}>Outlook 2027-29</SortTh>
+                <SortTh k="kept" info={<Term title="Our call" tip={<>{GLOSSARY.likely_call.text} Under it: the chance kept ({GLOSSARY.chance_kept.text.charAt(0).toLowerCase() + GLOSSARY.chance_kept.text.slice(1)}) The (i) beside each call gives that player&apos;s reasons.</>} />}>Our call</SortTh>
+                <SortTh k="should" info={<Term title="Worth his cost?" tip={<>{GLOSSARY.should_they.text} Under it: market price minus salary, in crore (+ = players like him fetch more than he is paid).</>} />}>Worth his cost?</SortTh>
+                <th className="th">
+                  <span className="inline-flex items-center gap-1">
+                    Your call
+                    <Term title="Your call" tip="Starts at our call (keep from 50% chance kept). Flip it to try your own list: the purse, the role gaps and the link update." />
+                  </span>
+                </th>
               </tr>
             </thead>
             <tbody>
               {rows.map((p) => (
-                <tr key={p.key} className={cn("hover:bg-surface/50", !p.kept && "opacity-70")}>
-                  <td className="td">
-                    <div className="flex items-center gap-1.5">
+                <tr key={p.key} className={cn("align-top hover:bg-surface/50", !p.kept && "opacity-70")}>
+                  <td className="td min-w-[10rem] max-w-[13rem] whitespace-normal">
+                    <div className="flex flex-wrap items-center gap-1.5">
                       {p.id ? (
                         <Link to={profilePath(p.id, p.profile ?? "ipl")} className="font-medium text-fg hover:text-accent-glow">{p.name}</Link>
                       ) : (
@@ -499,20 +502,17 @@ function KeepCalculator({ data, pool }: { data: KeepData; pool: Parameters<typeo
                     </div>
                     <div className="mt-0.5 text-[11px] text-muted">
                       {ROLE_LABEL[p.role] ?? p.role}
-                      {p.acquired ? ` · ${p.acquired}` : ""}
-                      {p.trade ? ` from ${p.trade.from}` : ""}
-                      {!p.absence && p.withdrawn ? " · replaced during the season" : ""}
+                      {p.age !== null && ` · ${Math.floor(p.age)}`}
+                      {p.acquired && ` · ${p.acquired}${p.trade ? ` from ${p.trade.from}` : ""}`}
+                      {!p.absence && p.withdrawn ? " · a replacement was signed for him during the season" : ""}
                     </div>
-                    {p.absence && <div className="mt-0.5 max-w-[20rem] whitespace-normal text-[11px] text-gold">{p.absence}</div>}
-                  </td>
-                  <td className="td stat-num text-right" title={p.outlook}>
-                    {p.age === null ? "—" : Math.floor(p.age)}
+                    {p.absence && <div className="mt-0.5 text-[11px] text-gold">{p.absence.startsWith("Replaced during the") ? "A replacement was signed for him during the 2026 season (reason not recorded)." : p.absence}</div>}
                   </td>
                   <td className="td stat-num text-right">
                     {crExact(p.salary)}
                     {Math.abs(p.cost - Number(p.salary)) >= 0.005 && (
-                      <div className="text-[11px] font-normal text-muted" title="A 2025 retention: keeping him costs what releasing him alone would free under the retention slabs">
-                        costs {cr(p.cost)}
+                      <div className="mt-0.5 whitespace-nowrap text-[11px] font-normal text-muted" title="A 2025 retention: keeping him costs what releasing him alone would free under the 2025 retention slabs (assumed to still apply), not his salary.">
+                        keep: {cr(p.cost)}
                       </div>
                     )}
                     {p.note && (
@@ -521,53 +521,73 @@ function KeepCalculator({ data, pool }: { data: KeepData; pool: Parameters<typeo
                       </InfoTip>
                     )}
                   </td>
-                  <td className="td stat-num whitespace-nowrap text-right">
+                  <td className="td stat-num whitespace-normal text-right">
                     {p.value === null ? (
                       <span className="text-muted">{p.no_data ? NO_DATA_LABEL : "—"}</span>
                     ) : p.value_now !== null && p.value_now !== undefined ? (
                       <>
-                        {fmtNum(p.value_now, 1)} <span className="text-muted">± {fmtNum(p.value_now_sd ?? 0, 1)}</span>
-                        <div className="text-[11px] text-muted">career {fmtNum(p.value, 1)} · {p.target_balls.toLocaleString()} IPL balls</div>
+                        <span className="whitespace-nowrap">
+                          {fmtNum(p.value_now, 1)} <span className="text-muted">± {fmtNum(p.value_now_sd ?? 0, 1)}</span>
+                        </span>
+                        <div className="mt-0.5 text-[11px] text-muted">
+                          career {fmtNum(p.value, 1)}<br />{p.target_balls.toLocaleString()} balls
+                        </div>
                       </>
                     ) : (
-                      <>{fmtNum(p.value, 1)} <span className="text-muted">± {fmtNum(p.value_sd ?? 0, 1)}</span></>
+                      <span className="whitespace-nowrap">{fmtNum(p.value, 1)} <span className="text-muted">± {fmtNum(p.value_sd ?? 0, 1)}</span></span>
                     )}
                   </td>
-                  <td className="td stat-num whitespace-nowrap text-right">
-                    {p.price === null ? "—" : cr(p.price)}
-                    {p.price !== null && p.price_value !== null && p.price_value !== undefined && (
-                      <div className="text-[11px] font-normal text-muted" title={PRICED_ON_TIP}>
-                        priced on {fmtNum(p.price_value, 1)}
-                      </div>
-                    )}
+                  <td className="td stat-num text-right">
+                    {p.price === null ? "—" : p.form_unseen ? <span className="text-muted">can't judge</span> : cr(p.price)}
                     {p.p_bought !== null && (
-                      <div className="text-[11px] font-normal text-muted" title="Chance a franchise buys a player like him if he's released (fitted to past auctions)">
+                      <div className="mt-0.5 whitespace-nowrap text-[11px] font-normal text-muted">
                         {fmtNum(100 * p.p_bought, 0)}% bought
                       </div>
                     )}
                   </td>
-                  <td className="td stat-num text-right text-muted">{p.onfield === null ? "—" : cr(p.onfield)}</td>
-                  <td className={cn("td stat-num text-right font-semibold", p.surplus === null ? "text-muted" : p.surplus >= 0 ? "text-willow" : "text-ball")}>
-                    {p.surplus === null ? "—" : (p.surplus > 0 ? "+" : "") + cr(p.surplus)}
-                  </td>
-                  <td className="td stat-num whitespace-nowrap text-right" title={p.forecast?.text ?? "No forecast: under 60 balls a season in his recent IPL seasons (or none in the last two), too little to project. The Keep model counts that: franchises release such players more often."}>
+                  <td className="td stat-num text-right" title={p.forecast?.text ?? undefined}>
                     {p.forecast ? (
                       <>
-                        <span className="font-semibold text-fg">{p.forecast.median.map(signed).join(" / ")}</span>
-                        <div className="text-[11px] font-normal text-muted">
-                          {FORECAST_FLAG[p.forecast.flag] ?? p.forecast.flag} · {Math.round(100 * p.forecast.p_regular_last)}% regular {p.forecast.seasons[p.forecast.seasons.length - 1]}
+                        <span className="whitespace-nowrap font-semibold text-fg">{p.forecast.median.map(signed).join(" / ")}</span>
+                        <div className="mt-0.5 text-[11px] font-normal text-muted">
+                          {FORECAST_FLAG[p.forecast.flag] ?? p.forecast.flag}<br />{Math.round(100 * p.forecast.p_regular_last)}% regular
                         </div>
                       </>
                     ) : (
                       <span className="text-[11px] text-muted">too little recent play</span>
                     )}
                   </td>
-                  <td className="td stat-num text-right" title={p.traded_in ? "Traded in before the deadline: kept, not predicted" : "The chance a franchise keeps a player like him at the retention deadline (a model of every real deadline 2018-2026)"}>
-                    {p.traded_in ? "traded in" : p.p_keep === null ? "—" : `${Math.round(100 * p.p_keep)}%`}
+                  <td className="td">
+                    <div className="flex items-center gap-1">
+                      <Badge tone={REC_TONE[p.rec]}>{p.traded_in ? "Kept (trade)" : REC_LABEL[p.rec]}</Badge>
+                      <Term
+                        title={`Why: ${p.name}`}
+                        tip={
+                          <>
+                            <span className="block text-fg">{p.reason}</span>
+                            {p.outlook}
+                            {p.form_note ? ` ${p.form_note}.` : ""}
+                          </>
+                        }
+                      />
+                    </div>
+                    <div className="mt-0.5 text-[11px] text-muted" title={p.traded_in ? "Traded in before the deadline: kept, not predicted" : undefined}>
+                      {p.traded_in ? "traded in" : p.p_keep === null ? "" : `${Math.round(100 * p.p_keep)}% chance kept`}
+                    </div>
                   </td>
-                  <td className="td"><Badge tone={REC_TONE[p.rec]}>{p.traded_in ? "Kept (trade)" : REC_LABEL[p.rec]}</Badge></td>
-                  <td className="td" title={p.price === null ? "No market price" : `Market price ${cr(p.price)} cr (upper quartile ${cr(p.price_central ?? p.price)}) against ${cr(p.cost)} cr to keep`}>
-                    {p.should ? <Badge tone={SHOULD_TONE[p.should]}>{SHOULD_LABEL[p.should]}</Badge> : p.form_unseen ? <span className="text-muted" title="Bought at the last auction above anything players like him fetch, on 2025 domestic form our data doesn't have (SMAT on Cricsheet ends Dec 2024)">Can't judge<div className="text-[11px]">bought on 2025 domestic form our data doesn't have</div></span> : <span className="text-muted">—</span>}
+                  <td className="td" title={p.price === null ? "No market price" : `Market price ${cr(p.price)} cr (dearer quarter ${cr(p.price_central ?? p.price)}) against ${cr(p.cost)} cr to keep`}>
+                    {p.should ? (
+                      <Badge tone={SHOULD_TONE[p.should]}>{SHOULD_LABEL[p.should]}</Badge>
+                    ) : p.form_unseen ? (
+                      <span className="text-muted" title="Bought at the last auction above anything players like him fetch, on 2025 domestic form our data doesn't have (our domestic T20 data ends Dec 2024).">Can't judge</span>
+                    ) : (
+                      <span className="text-muted">—</span>
+                    )}
+                    {p.surplus !== null && !p.form_unseen && (
+                      <div className={cn("mt-0.5 whitespace-nowrap text-[11px]", p.surplus >= 0 ? "text-willow" : "text-ball")}>
+                        {(p.surplus > 0 ? "+" : "") + cr(p.surplus)} cr
+                      </div>
+                    )}
                   </td>
                   <td className="td">
                     <div className="seg flex-nowrap" role="radiogroup" aria-label={`Decision for ${p.name}`}>
@@ -580,10 +600,6 @@ function KeepCalculator({ data, pool }: { data: KeepData; pool: Parameters<typeo
                       ))}
                     </div>
                     {p.overridden && <div className="mt-0.5 text-[10px] text-gold">your call</div>}
-                  </td>
-                  <td className="td min-w-[18rem] max-w-[26rem] whitespace-normal text-xs leading-relaxed text-muted">
-                    <div className="text-fg">{p.reason}</div>
-                    <div>{p.outlook}{p.form_note ? ` ${p.form_note}.` : ""}</div>
                   </td>
                 </tr>
               ))}
@@ -609,12 +625,17 @@ function KeepCalculator({ data, pool }: { data: KeepData; pool: Parameters<typeo
           <table className="w-full border-collapse">
             <thead>
               <tr>
-                <th className="th">Need</th>
-                <th className="th text-right">Wanted</th>
-                <th className="th text-right">Kept</th>
-                <th className="th text-right">Gap</th>
-                <th className="th">Cheapest that fit</th>
-                <th className="th text-right">Cost</th>
+                <th className="th">Role</th>
+                <th className="th text-right">Want</th>
+                <th className="th text-right">Have</th>
+                <th className="th text-right">Short by</th>
+                <th className="th">
+                  <span className="inline-flex items-center gap-1">
+                    Cheapest players who fit
+                    <Term title="Cheapest players who fit" tip="From the likely auction pool (free agents plus the players our calls release from other squads, marked with their team): the cheapest at least as good as the best player you released in that role, or replacement level if you released none. Price is the market price in crore." />
+                  </span>
+                </th>
+                <th className="th text-right">Cost (cr)</th>
               </tr>
             </thead>
             <tbody>
@@ -623,7 +644,7 @@ function KeepCalculator({ data, pool }: { data: KeepData; pool: Parameters<typeo
                   <td className="td font-medium text-fg">{g.label}</td>
                   <td className="td stat-num text-right">{g.target}</td>
                   <td className="td stat-num text-right">{g.kept}</td>
-                  <td className={cn("td stat-num text-right", g.gap > 0 && "font-semibold text-gold")}>{g.gap}</td>
+                  <td className={cn("td stat-num text-right", g.gap > 0 && "font-semibold text-gold")}>{g.gap > 0 ? g.gap : ""}</td>
                   <td className="td min-w-[14rem] whitespace-normal text-xs text-muted">
                     {g.gap === 0 ? "covered" : g.to_buy === 0 ? "covered by the buys above" : g.picks.length === 0 ? "none found" : g.picks.map((c, i) => (
                       <span key={c.id}>
@@ -635,11 +656,11 @@ function KeepCalculator({ data, pool }: { data: KeepData; pool: Parameters<typeo
                     ))}
                     {g.to_buy > 0 && (
                       <div className="mt-0.5 text-[11px]">
-                        ≥ {fmtNum(g.ref_value, 1)} runs a match {g.ref_from_release ? "(best released)" : "(replacement level)"}
+                        at least {fmtNum(g.ref_value, 1)} runs a match {g.ref_from_release ? "(as good as your best release)" : "(replacement level)"}
                       </div>
                     )}
                   </td>
-                  <td className="td stat-num text-right">{g.cost ? `${cr(g.cost)} cr` : "—"}</td>
+                  <td className="td stat-num text-right">{g.cost ? cr(g.cost) : "—"}</td>
                 </tr>
               ))}
             </tbody>

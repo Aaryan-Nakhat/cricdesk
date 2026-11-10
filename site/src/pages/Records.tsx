@@ -31,17 +31,42 @@ const COL_LABELS: Record<string, string> = {
   batter: "Batter",
   bowler: "Bowler",
   team: "Team",
+  batting_team: "Team",
+  batters: "Batter(s) facing",
   match_date: "Date",
   venue: "Venue",
   runs: "Runs",
   balls: "Balls",
-  fours: "4s",
-  sixes: "6s",
-  wickets: "Wkts",
-  runs_conceded: "Runs",
+  legal_balls: "Balls",
+  fours: "Fours",
+  sixes: "Sixes",
+  wickets: "Wickets",
+  matches: "Matches",
+  innings_count: "Innings",
+  career_runs: "Runs",
+  runs_conceded: "Runs conceded",
+  balls_to_fifty: "Balls to 50",
+  balls_to_hundred: "Balls to 100",
   match_id: "Match",
   total: "Total",
+  total_runs: "Total",
+  overs_used: "Overs",
+  over: "Over",
   over_runs: "Runs",
+  runs_in_over: "Runs in the over",
+  sixes_in_over: "Sixes",
+  fours_in_over: "Fours",
+};
+
+/** Columns a visitor could misread get an (i). */
+const COL_TIPS: Record<string, string> = {
+  legal_balls: "Legal balls bowled: wides and no-balls don't count.",
+  runs_conceded: "Runs given away: off the bat plus wides and no-balls (byes and leg-byes don't count against the bowler).",
+  runs_in_over: "Runs the bowler conceded in that over: off the bat plus wides and no-balls (byes and leg-byes are not his).",
+  balls_to_fifty: "Balls he took to reach 50 in that innings (wides don't count as balls faced).",
+  balls_to_hundred: "Balls he took to reach 100 in that innings (wides don't count as balls faced).",
+  overs_used: "Overs the innings lasted (20 = batted the full innings).",
+  over: "Which over of the innings, 1 to 20.",
 };
 
 function prettyCell(v: unknown): string {
@@ -71,6 +96,8 @@ export function Records() {
     const disp = r[`${c}_display`];
     if (typeof disp === "string" && disp.trim()) return disp;
     if ((c === "batter" || c === "bowler") && typeof r[c] === "string") return nameOf(String(r[c]), r.cricsheet_id);
+    // the data counts overs from 0; people count them from 1
+    if (c === "over" && typeof r[c] === "number") return String(Number(r[c]) + 1);
     return prettyCell(r[c]);
   };
   const hasDate = rawRows.some((r) => yearOf(r.match_date) !== null);
@@ -166,7 +193,10 @@ export function Records() {
                         key={c}
                         className={cn("th", typeof rows[0]?.[c] === "number" && "text-right")}
                       >
-                        {COL_LABELS[c] ?? c.replace(/_/g, " ")}
+                        <span className="inline-flex items-center gap-1">
+                          {COL_LABELS[c] ?? c.replace(/_/g, " ")}
+                          {COL_TIPS[c] && <InfoTip title={COL_LABELS[c] ?? c}>{COL_TIPS[c]}</InfoTip>}
+                        </span>
                       </th>
                     ))}
                   </tr>

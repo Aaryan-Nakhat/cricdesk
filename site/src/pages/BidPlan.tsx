@@ -44,6 +44,8 @@ import {
 import { useUrlParams } from "@/lib/useUrlState";
 import { PageTitle, Card, CardHeader, Spinner, Badge, Empty, InfoTip, Collapsible, ErrorBox, StatTile, StaleShareBadge } from "@/components/ui";
 import { Combobox } from "@/components/Combobox";
+import { Term } from "@/components/Term";
+import { GLOSSARY } from "@/lib/glossary";
 import { cn, profilePath } from "@/lib/utils";
 
 const ROLE_LABEL: Record<string, string> = { batter: "Batter", bowler: "Bowler", all_rounder: "All-rounder", keeper: "Keeper" };
@@ -107,6 +109,8 @@ function MaxBidInput({ value, mine, onCommit }: { value: number; mine: boolean; 
   );
 }
 
+const LIKELY_TIP = "the plan lands him in at least half of the simulated auctions, at his average price: he is in your likely squad.";
+
 function HowItWorks({ res }: { res: Plan | null }) {
   return (
     <Collapsible title="How the plan is made (plain English)" icon={<Calculator className="h-4 w-4" />}>
@@ -127,7 +131,7 @@ function HowItWorks({ res }: { res: Plan | null }) {
           place, how much he'd improve its squad, his market and last price; how hot a player is varies from run to run).
           For every player that gives the price a rival would have paid in each run: the price you'd have to beat (one
           ladder step above the best rival's bid). "Rivals
-          pay" is the middle of those runs, "usually enough" what wins him in 9 runs of 10, "P(≤ max)" the share of runs in
+          pay" is the middle of those runs, "usually enough" what wins him in 9 runs of 10, "chance at or under max" the share of runs in
           which your max bid is enough. Your own releases are never bought back: if one is worth more to your squad than
           his salary, the plan says "reconsider keeping".
         </p>
@@ -167,7 +171,7 @@ max bid  = the price at which he gives up as much as he adds: the later
           you give a max bid). <b className="text-fg">Max bid</b> = the price where he gives up as much as he adds (the
           median over the runs): above it the money and the place buy more elsewhere. <b className="text-fg">Fallback chains</b> list a
           role's targets in priority order, each with his max bid if everyone before him has gone for more (so with
-          the money still there: these bids sit high). Priority = P(≤ max) × his gain × (1 − the price you'd expect
+          the money still there: these bids sit high). Priority = chance at or under max × his gain × (1 − the price you'd expect
           to pay ÷ his max bid).
         </p>
         <p className="rounded-lg border border-willow/20 bg-willow/5 px-3 py-2 text-xs">
@@ -524,8 +528,8 @@ function Summary({ ctx, res, needs, overrides }: {
         <StatTile label="Purse left" value={`${cr(ctx.purse_left)} cr`} hint={`${cr(ctx.salary_kept)} cr kept salaries`} />
         <StatTile label="Open places" value={`${res.slots_open}`} hint={`${res.overseas_open} overseas · squad ${ctx.rules.squad_min}–${ctx.rules.squad_max}`} />
         <StatTile label="Strength now → expected" value={`${fmtNum(res.before.total, 1)} → ${fmtNum(res.mean_strength, 1)}`}
-          hint={`best XI ${fmtNum(res.before.xi, 1)} → ${fmtNum(res.mean_xi, 1)} (runs a match above replacement)`} />
-        <StatTile label="Expected spend" value={`${cr(res.mean_spend)} cr`} hint={`squad ${fmtNum(res.mean_squad, 1)} on average · λ ${fmtNum(res.lam, 2)} runs/cr`} />
+          hint={`runs a match above a replacement-level side; best XI ${fmtNum(res.before.xi, 1)} → ${fmtNum(res.mean_xi, 1)}`} />
+        <StatTile label="Expected spend" value={`${cr(res.mean_spend)} cr`} hint={`squad of ${fmtNum(res.mean_squad, 1)} on average · a crore buys ${fmtNum(res.lam, 2)} runs a match`} />
       </div>
       <Card className="px-5 py-4 text-sm">
         <div className="mb-1 flex items-center gap-2 font-semibold text-fg">
@@ -600,7 +604,7 @@ function Summary({ ctx, res, needs, overrides }: {
               <InfoTip title="Why the plan never buys back your releases">
                 A player you release goes into the auction, and the plan doesn't bid for him: if he's worth that much to
                 you, keeping him at his salary is the cheaper route (no bidding war, no risk of losing him). These are
-                your releases whose worth to the likely squad (gain ÷ λ) is at least their salary. Set your own max bid to
+                your releases whose worth to the likely squad (what he adds, in runs a match, turned into crore at what a crore still buys) is at least their salary. Set your own max bid to
                 chase one anyway.
               </InfoTip>
             </div>
@@ -644,54 +648,67 @@ function Targets({ res, ctx, overrides, setOverride, nameLink, addOptions }: {
             <b>Usually enough</b>: a bid that wins him in 9 runs of 10. <b>Max bid</b> is your walk-away price: what he
             is worth to your squad (in an open auction you keep bidding while the price is below that); expect to pay
             near "rivals pay".{" "}
-            <b>P(≤ max)</b>: the share of runs in which your max bid is enough. <b>In plan</b>: how often the bidding rule
+            <b>Chance at or under max</b>: the share of runs in which your max bid is enough. <b>In plan</b>: how often the bidding rule
             actually lands him (it can't buy everyone: purse, places and overseas slots run out).{" "}
-            <b>Gain</b>: what he adds to the likely squad's strength. A "purse" max bid is cut to what the purse leaves after
+            <b>Gain</b>: what he adds to the likely squad's strength. A max bid marked "cut to purse" is cut to what the purse leaves after
             the other likely buys. <b>Market price</b> is the fitted model's median for players like him, with the chance a
             franchise buys him at all.
           </InfoTip>
         }
       />
-      <div className="overflow-auto">
-        <table className="w-full border-collapse">
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse [&_td]:px-2 [&_th]:px-2">
           <thead>
             <tr>
-              <th className="th text-right">#</th>
-              <th className="th">Player</th>
-              <th className="th">Slot</th>
-              <th className="th text-right">Value</th>
-              <th className="th text-right">Market price</th>
-              <th className="th text-right">Rivals pay</th>
-              <th className="th text-right">Usually enough</th>
-              <th className="th text-right">Max bid</th>
-              <th className="th text-right print:hidden">Your max</th>
-              <th className="th text-right">P(≤ max)</th>
-              <th className="th text-right">In plan</th>
-              <th className="th text-right">Gain</th>
+              <th className="th">
+                <span className="inline-flex items-center gap-1">
+                  Player
+                  <Term title="Player" tip={<>Numbered in priority order: chance at or under max × what he adds × (1 − the price you&apos;d expect to pay ÷ his max bid). Under the name: his role, the squad place the plan buys him for, and where he comes from. <b>Free agent</b>: {GLOSSARY.free_agent.text} <b>Released by</b>: {GLOSSARY.released_by.text} The plane marks an overseas player. Badges: <b>likely</b> = {LIKELY_TIP} <b>eligibility?</b> = not confirmed he may play in 2027 (reason under his name). <b>N% of rating from … data to …</b> = {GLOSSARY.smat_stale.text}</>} />
+                </span>
+              </th>
+              <th className="th text-right"><span className="inline-flex flex-row-reverse items-center gap-1">Value<Term k="value" /></span></th>
+              <th className="th text-right"><span className="inline-flex flex-row-reverse items-center gap-1">Market<br />price (cr)<Term title="Market price" tip={<>{GLOSSARY.market_price.text} Under it: {GLOSSARY.pct_bought.text.charAt(0).toLowerCase() + GLOSSARY.pct_bought.text.slice(1)}</>} /></span></th>
+              <th className="th text-right"><span className="inline-flex flex-row-reverse items-center gap-1">Rivals<br />pay (cr)<Term title="Rivals pay" tip={<>{GLOSSARY.rivals_pay.text} Under it, &quot;9 in 10&quot;: {GLOSSARY.usually_enough.text.charAt(0).toLowerCase() + GLOSSARY.usually_enough.text.slice(1)}</>} /></span></th>
+              <th className="th text-right"><span className="inline-flex flex-row-reverse items-center gap-1">Max<br />bid (cr)<Term title="Max bid" tip={<>{GLOSSARY.max_bid.text} &quot;cut to purse&quot;: cut to what your purse leaves after the other likely buys (keeping 0.3 cr for each place still needed). &quot;yours&quot;: you typed it.</>} /></span></th>
+              <th className="th text-right print:hidden">
+                <span className="inline-flex flex-row-reverse items-center gap-1">
+                  Your<br />max (cr)
+                  <Term title="Your max" tip="Type your own walk-away price to override ours: blank = ours, 0 = never bid. The whole plan reruns with it." />
+                </span>
+              </th>
+              <th className="th text-right"><span className="inline-flex flex-row-reverse items-center gap-1">Chance at<br />or under max<Term k="p_le_max" /></span></th>
+              <th className="th text-right">
+                <span className="inline-flex flex-row-reverse items-center gap-1">
+                  In plan
+                  <Term title="In plan" tip="How often the bidding rule actually lands him across the simulated auctions. It can't buy everyone: the purse, squad places and overseas places run out." />
+                </span>
+              </th>
+              <th className="th text-right">
+                <span className="inline-flex flex-row-reverse items-center gap-1">
+                  Gain
+                  <Term title="Gain" tip="What he adds to your likely squad's strength, in runs a match (best XI plus the bench covering missed matches, against a replacement-level player)." />
+                </span>
+              </th>
             </tr>
           </thead>
           <tbody>
             {res.targets.map((x) => (
-              <tr key={x.id} className="hover:bg-surface/50">
-                <td className="td stat-num text-right text-muted">{x.priority}</td>
-                <td className="td">
-                  <div className="flex items-center gap-1.5 whitespace-nowrap">
+              <tr key={x.id} className="align-top hover:bg-surface/50">
+                <td className="td min-w-[13rem] max-w-[17rem] whitespace-normal">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="stat-num text-xs text-muted">{x.priority}.</span>
                     {nameLink(x.id, x.name)}
                     {x.overseas && <Plane className="h-3 w-3 shrink-0 text-willow" aria-label="overseas" />}
-                    {x.likely && <Badge tone="willow">likely</Badge>}
-                    {x.eligibility && (
-                      <span title={x.eligibility}>
-                        <Badge tone="gold">eligibility?</Badge>
-                      </span>
-                    )}
+                    {x.likely && <span title={LIKELY_TIP}><Badge tone="willow">likely</Badge></span>}
+                    {x.eligibility && <span title={x.eligibility}><Badge tone="gold">eligibility?</Badge></span>}
                   </div>
-                  <div className="mt-0.5 text-[11px] text-muted">
-                    {ROLE_LABEL[x.role] ?? x.role} · {x.from_team ? (x.from_team === ctx.team ? "released by you" : `released by ${x.from_team}`) : "free agent"}
+                  <div className="mt-0.5 flex flex-wrap items-center gap-x-1 text-[11px] text-muted">
+                    {ROLE_LABEL[x.role] ?? x.role} · for {SLOT_LABEL[x.slot].toLowerCase()} ·{" "}
+                    {x.from_team ? (x.from_team === ctx.team ? "released by you" : `released by ${x.from_team}`) : "free agent"}
                   </div>
-                  {x.eligibility && <div className="mt-0.5 max-w-[22rem] whitespace-normal text-[11px] text-gold">{x.eligibility}</div>}
+                  {x.eligibility && <div className="mt-0.5 text-[11px] text-gold">{x.eligibility}</div>}
                 </td>
-                <td className="td whitespace-nowrap text-xs text-muted">{SLOT_LABEL[x.slot]}</td>
-                <td className="td stat-num whitespace-nowrap text-right">
+                <td className="td stat-num text-right">
                   {x.value_now !== null && x.value_now !== undefined ? (
                     <>
                       {fmtNum(x.value_now, 1)}
@@ -699,15 +716,27 @@ function Targets({ res, ctx, overrides, setOverride, nameLink, addOptions }: {
                     </>
                   ) : x.value === null || x.value === undefined ? "—" : fmtNum(x.value, 1)}
                 </td>
-                <td className="td stat-num whitespace-nowrap text-right">
+                <td className="td stat-num text-right">
                   {cr(x.price)}
-                  {x.p_bought !== null && x.p_bought !== undefined && <div className="text-[11px] text-muted">{pct(x.p_bought)} bought</div>}
+                  {x.p_bought !== null && x.p_bought !== undefined && (
+                    <div className="whitespace-nowrap text-[11px] text-muted">{pct(x.p_bought)} bought</div>
+                  )}
                 </td>
-                <td className="td stat-num text-right">{cr(x.expected_price)}</td>
-                <td className="td stat-num text-right text-muted">{cr(x.enough_90)}</td>
-                <td className="td stat-num whitespace-nowrap text-right font-semibold text-fg">
+                <td className="td stat-num text-right">
+                  {cr(x.expected_price)}
+                  <div className="whitespace-nowrap text-[11px] text-muted" title={GLOSSARY.usually_enough.text}>
+                    9 in 10: {cr(x.enough_90)}
+                  </div>
+                </td>
+                <td className="td stat-num text-right font-semibold text-fg">
                   {cr(x.max_bid)}
-                  {x.override ? <div className="text-[10px] font-normal text-gold">yours</div> : x.purse_bound ? <div className="text-[10px] font-normal text-muted">purse</div> : null}
+                  {x.override ? (
+                    <div className="text-[10px] font-normal text-gold">yours</div>
+                  ) : x.purse_bound ? (
+                    <div className="whitespace-nowrap text-[10px] font-normal text-muted" title="His max bid is cut to what your purse leaves after the other likely buys (keeping 0.3 cr for each place still needed).">
+                      cut to purse
+                    </div>
+                  ) : null}
                 </td>
                 <td className="td text-right print:hidden">
                   <MaxBidInput value={x.max_bid} mine={x.override} onCommit={(v) => setOverride(x.id, v)} />
@@ -740,7 +769,7 @@ function Chains({ res }: { res: Plan }) {
     <Card className="overflow-hidden">
       <CardHeader
         title="Fallback chains"
-        subtitle="Per role, in priority order: if a name goes above his max bid, the next one is worth this much to you"
+        subtitle="Per role, in priority order: if a name goes above his max bid, bid up to this much for the next one. The % is the chance that bid is enough."
         right={
           <InfoTip title="How a chain reads">
             Each step's max bid assumes every name before it in the chain went for more than his max: the gap he leaves
@@ -760,8 +789,8 @@ function Chains({ res }: { res: Plan }) {
                   {k > 0 && <ArrowRight className="h-3.5 w-3.5 text-faint" aria-label="if he goes above that" />}
                   <span className="rounded-lg border border-border bg-surface px-2 py-1">
                     <span className="text-fg">{s.name}</span>{" "}
-                    <span className="stat-num font-semibold text-accent-glow">≤ {cr(s.max_bid)} cr</span>{" "}
-                    <span className="text-[11px] text-muted">({pct(s.p_le_max)})</span>
+                    <span className="stat-num font-semibold text-accent-glow">up to {cr(s.max_bid)} cr</span>{" "}
+                    <span className="text-[11px] text-muted">({pct(s.p_le_max)} chance)</span>
                   </span>
                 </span>
               ))}
@@ -783,7 +812,7 @@ function Rivals({ ctx }: { ctx: BidContext }) {
               <th className="th">Team</th>
               <th className="th text-right">Kept</th>
               <th className="th text-right">Open places</th>
-              <th className="th text-right">Purse left</th>
+              <th className="th text-right">Purse left (cr)</th>
             </tr>
           </thead>
           <tbody>
@@ -792,7 +821,7 @@ function Rivals({ ctx }: { ctx: BidContext }) {
                 <td className="td font-medium text-fg">{r.team}</td>
                 <td className="td stat-num text-right">{r.kept.length}</td>
                 <td className="td stat-num text-right">{Number(ctx.rules.squad_max) - r.kept.length}</td>
-                <td className="td stat-num text-right">{cr(r.purse_left)} cr</td>
+                <td className="td stat-num text-right">{cr(r.purse_left)}</td>
               </tr>
             ))}
           </tbody>
@@ -821,7 +850,7 @@ function Assumptions({ ctx, res, data, openSlots, trials, register }: {
     ["Replacement level", `${fmtNum(REPLACEMENT, 0)} (contributions are runs a match above it)`, false],
     ["XI balls", `held to ${TEAM_BALLS} a side's innings, faced and bowled`, false],
     ["Depth", "the bench fills the matches the XI misses (its chance of playing); role needs reported, not scored", false],
-    ["Exchange rate λ", `${fmtNum(res.lam, 2)} runs per crore at the start (what a crore still buys; it changes lot by lot)`, false],
+    ["What a crore buys", `${fmtNum(res.lam, 2)} runs a match per crore at the start (what a crore still buys; it changes lot by lot)`, false],
     ["Unspent purse", "worth what the later lots can still buy at their expected prices; nothing after the auction", false],
     ["Plan converged", res.converged ? `yes, in ${res.rounds} round${res.rounds === 1 ? "" : "s"}` : `stopped after ${res.rounds} rounds`, false],
   ];

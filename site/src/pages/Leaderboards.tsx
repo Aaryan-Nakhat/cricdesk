@@ -119,6 +119,7 @@ export function Leaderboards() {
             label: c.label,
             align: "left" as const,
             sortable: false,
+            info: c.tip ? <InfoTip title={c.label}>{c.tip}</InfoTip> : undefined,
             render: (row: Record<string, unknown>) => (
               <Sparkline values={(row.curve as (number | null)[]) ?? []} />
             ),
@@ -139,13 +140,13 @@ export function Leaderboards() {
               primary: c.primary,
               align: (c.digits !== undefined ? "right" : "left") as "left" | "right",
               fmtValue: c.fmt ? (v: unknown) => fmtMetric(v, c) : undefined,
-              info: c.primary ? <MetricInfo m={metric} /> : undefined,
+              info: c.primary ? <MetricInfo m={metric} /> : c.tip ? <InfoTip title={c.label}>{c.tip}</InfoTip> : undefined,
             },
     ),
     // a matches column, unless the metric already shows one (NGI does)
     ...(metric.columns.some((c) => c.key === "matches")
       ? []
-      : [{ key: "matches", label: "Matches", digits: 0, align: "right" as const }]),
+      : [{ key: "matches", label: "Matches", digits: 0, align: "right" as const, info: <InfoTip title="Matches">Matches he played in this period (in the playing XI).</InfoTip> }]),
   ];
 
   return (
@@ -216,8 +217,10 @@ export function Leaderboards() {
           <span className="text-sm font-medium text-muted">Period</span>
           <InfoTip title="Recomputed time windows">
             These re-run the metric over only that window of matches — the numbers actually change,
-            they're not just a row filter. Windows are relative to the latest match in this
-            collection.
+            they're not just a row filter. All-time: every match. Last 3 yrs / Last 1 yr: the matches in
+            that window before the latest match in this collection. Impact Player era (IPL): matches since
+            31 Mar 2023, when each side could bring on a twelfth player mid-match, which deepened batting
+            and raised scores.
           </InfoTip>
           <Segmented
             label="Period"

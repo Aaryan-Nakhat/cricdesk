@@ -7,32 +7,39 @@ import { getPartnerships, type Partnership } from "@/lib/data";
 import { usePlayers } from "@/lib/usePlayers";
 import { Combobox } from "@/components/Combobox";
 import { DataTable, type Col } from "@/components/DataTable";
-import { PageTitle, Card, CardHeader, Spinner, ErrorBox, Empty } from "@/components/ui";
+import { PageTitle, Card, CardHeader, Spinner, ErrorBox, Empty, InfoTip } from "@/components/ui";
 import { useUrlId, useUrlNumber } from "@/lib/useUrlState";
 
 type Row = Record<string, unknown>;
+
+const TIP = {
+  best: <InfoTip title="Best">Their highest single stand.</InfoTip>,
+  avg: <InfoTip title="Average">Runs per stand: their total runs divided by the innings they batted together.</InfoTip>,
+  fifties: <InfoTip title="50+ stands">Stands of 50 runs or more (100+ stands included).</InfoTip>,
+  hundreds: <InfoTip title="100+ stands">Stands of 100 runs or more.</InfoTip>,
+};
 
 // a picked player's partners
 const PARTNER_COLS: Col<Row>[] = [
   { key: "partner", label: "Partner", primary: false },
   { key: "runs", label: "Runs", align: "right", digits: 0, primary: true },
-  { key: "innings", label: "Inns", align: "right", digits: 0 },
-  { key: "best", label: "Best", align: "right", digits: 0 },
-  { key: "avg", label: "Avg", align: "right", digits: 1 },
-  { key: "sr", label: "SR", align: "right", digits: 1 },
-  { key: "fifties", label: "50+", align: "right", digits: 0 },
-  { key: "hundreds", label: "100+", align: "right", digits: 0 },
+  { key: "innings", label: "Innings", align: "right", digits: 0 },
+  { key: "best", label: "Best", align: "right", digits: 0, info: TIP.best },
+  { key: "avg", label: "Average", align: "right", digits: 1, info: TIP.avg },
+  { key: "sr", label: "Strike rate", align: "right", digits: 1 },
+  { key: "fifties", label: "50+ stands", align: "right", digits: 0, info: TIP.fifties },
+  { key: "hundreds", label: "100+ stands", align: "right", digits: 0, info: TIP.hundreds },
 ];
 
 // the all-time best stands
 const BEST_COLS: Col<Row>[] = [
   { key: "pair", label: "Partnership", primary: false },
   { key: "runs", label: "Runs", align: "right", digits: 0, primary: true },
-  { key: "innings", label: "Inns", align: "right", digits: 0 },
-  { key: "best", label: "Best", align: "right", digits: 0 },
-  { key: "avg", label: "Avg", align: "right", digits: 1 },
-  { key: "sr", label: "SR", align: "right", digits: 1 },
-  { key: "hundreds", label: "100+", align: "right", digits: 0 },
+  { key: "innings", label: "Innings", align: "right", digits: 0 },
+  { key: "best", label: "Best", align: "right", digits: 0, info: TIP.best },
+  { key: "avg", label: "Average", align: "right", digits: 1, info: TIP.avg },
+  { key: "sr", label: "Strike rate", align: "right", digits: 1 },
+  { key: "hundreds", label: "100+ stands", align: "right", digits: 0, info: TIP.hundreds },
 ];
 
 export function Partnerships() {
@@ -99,6 +106,7 @@ export function Partnerships() {
         />
         <label className="flex items-center gap-2 text-sm text-muted">
           <span>Min runs</span>
+          <InfoTip title="Min runs">Hides pairs whose runs together add up to less than this.</InfoTip>
           <input
             type="number"
             min={0}
