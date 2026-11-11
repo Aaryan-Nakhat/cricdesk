@@ -3024,17 +3024,17 @@ keeping him takes from the purse; P = the chance a franchise keeps a player like
 | player | team | salary | cost | market | P | call | what the franchise did |
 |---|---|---|---|---|---|---|---|
 | Virat Kohli | RCB | 21 | 15 (slab) | 7.84 / 18.05 | 97% | Keep | Retained 2025 (21 cr), kept for 2026 |
-| Rohit Sharma | MI | 16.3 | 14 (slab) | 4.98 / 11.53 | 68% | Keep | Retained 2025, kept for 2026 |
-| Suryakumar Yadav | MI | 16.35 | 14 (slab) | 9.17 / 21.41 | 96% | Keep | Retained 2025, kept for 2026 |
-| Jasprit Bumrah | MI | 18 | 14 (slab) | 13.42 / 30.78 | 99% | Keep | Retained 2025, kept for 2026 |
+| Rohit Sharma | MI | 16.3 | 18 (slab) | 4.98 / 11.53 | 67% | Keep | Retained 2025, kept for 2026 |
+| Suryakumar Yadav | MI | 16.35 | 18 (slab) | 9.17 / 21.41 | 96% | Keep | Retained 2025, kept for 2026 |
+| Jasprit Bumrah | MI | 18 | 18 | 13.42 / 30.78 | 99% | Keep | Retained 2025, kept for 2026 |
 | Shubman Gill | GT | 16.5 | 11 (slab) | 23.09 / 52.98 | 100% | Keep | Retained 2025, kept for 2026 (captain) |
 | Rishabh Pant | DC | 15 | 15 | 17.61 / 40.71 | – | Kept (trade) | Bought 27 by LSG (2025); traded back to DC at 15 (June 2026) |
 | Ravindra Jadeja | RR | 14 | 14 | 8.68 / 19.98 | 91% | Keep | Retained by CSK 2025; traded to RR for 2026 |
 | MS Dhoni | CSK | 4 | 4 | 0.78 / 1.93 | 48% | Toss-up (released) | Retained 2025 (uncapped, 4 cr), kept for 2026; did not play in 2026 |
 | Rinku Singh | KKR | 13 | 11 (slab) | 6.54 / 15.51 | 96% | Keep | Retained 2025, kept for 2026 |
 | Tejasvi Singh | KKR | 3 | 3 | 0.65 / 1.76 | 47% | Toss-up (released) | Bought 3 cr at the 2026 auction; 15 IPL balls |
-| Hardik Pandya | MI | 16.35 | 14 (slab) | 13.56 / 31.61 | 89% | Keep | Retained 2025, kept for 2026 (captain) |
-| Tilak Varma | MI | 8 | 8 | 11.86 / 19 | 99% | Keep | Retained 2025, kept for 2026 |
+| Hardik Pandya | PBKS | 16.35 | 16.35 | 13.56 / 31.61 | – | Kept (trade) | Retained 2025, kept for 2026 (captain) |
+| Tilak Varma | MI | 8 | 10.35 (slab) | 11.86 / 19 | 99% | Keep | Retained 2025, kept for 2026 |
 | Abhishek Sharma | SRH | 14 | 14 | 17.22 / 40.77 | 100% | Keep | Retained 2025, kept for 2026 |
 | Yashasvi Jaiswal | RR | 18 | 18 | 12.74 / 30.22 | 99% | Keep | Retained 2025, kept for 2026 |
 | Shreyas Iyer | PBKS | 26.75 | 26.75 | 17.53 / 40.51 | 96% | Keep | Bought 26.75 (2025), kept for 2026 (captain) |
@@ -3047,7 +3047,7 @@ keeping him takes from the purse; P = the chance a franchise keeps a player like
 | Heinrich Klaasen | SRH | 23 | 14 (slab) | 10.66 / 24.91 | 95% | Keep | Retained 2025 (23 cr), kept for 2026 |
 | Cameron Green | KKR | 25.2 | 25.2 | 9.21 / 21.71 | 88% | Keep | Bought 25.2 at the 2026 auction (paid 18) |
 | Vaibhav Suryavanshi | RR | 1.1 | 1.1 | 9.92 / 14.77 | 100% | Keep | Bought 1.1 (2025), kept for 2026 |
-| Arshdeep Singh | PBKS | 18 | 18 | 10.75 / 25.03 | 94% | Keep | Bought back 18 with an RTM (2025), kept for 2026 |
+| Arshdeep Singh | MI | 18 | 18 | 10.75 / 25.03 | – | Kept (trade) | Bought back 18 with an RTM (2025), kept for 2026 |
 
 23 of the 25 are kept by default: not kept, MS Dhoni (48%, 0 IPL matches last season); Tejasvi Singh (47%, 2 IPL matches last season).
 <!-- keep-reality:end -->
@@ -3066,8 +3066,8 @@ The default calls (P = the chance kept; the default plan releases below 50%), le
 - **GT** (16 kept, 10.75 cr left): release Luke Wood (24%), Tom Banton, Connor Esterhuizen, Kulwant Khejroliya, Glenn Phillips, Jayant Yadav, Ishant Sharma, Y Prithvi Raj, Gurnoor Brar, Anuj Rawat, Kumar Kushagra (46%). Toss-up, kept: R Sai Kishore, Arshad Khan, Jason Holder, Manav Suthar.
 - **KKR** (14 kept, 39.95 cr left): release Tim Seifert (28%), Blessing Muzarabani, Rachin Ravindra, Navdeep Saini, Rahul Tripathi, Matheesha Pathirana, Rovman Powell, Akash Deep, Sarthak Ranjan, Umran Malik, Luvnith Sisodia, Tejasvi Singh, Prashant Solanki (48%). Toss-up, kept: Daksh Kamra, Manish Pandey.
 - **LSG** (19 kept, 25.8 cr left): release Anrich Nortje (21%), Shahbaz Ahmed, George Linde, Matthew Breetzke, Arjun Tendulkar, Wanindu Hasaranga, Himmat Singh (49%). Toss-up, kept: Naman Tiwari, Akash Singh, Akshat Raghuwanshi, Arshin Kulkarni, Aiden Markram.
-- **MI** (21 kept, 14.65 cr left): release Keshav Maharaj (24%), Quinton de Kock, Trent Boult, Mahipal Lomror, Mohammad Izhar, Mayank Rawat, Ruchit Ahir, Atharva Ankolekar (50%). Toss-up, kept: Corbin Bosch, Robin Minz, Mitchell Santner, Sherfane Rutherford, Raj Bawa, Danish Malewar, Mayank Markande, Ashwani Kumar, Shardul Thakur, Krish Bhagat, Will Jacks.
-- **PBKS** (17 kept, 18.45 cr left): release Ben Dwarshuis (18%), Lockie Ferguson, Vishnu Vinod, Yash Thakur, Mitchell Owen, Praveen Dubey, Azmatullah Omarzai, Pyla Avinash (47%). Toss-up, kept: Harnoor Pannu, Vishal Nishad, Marcus Stoinis, Xavier Bartlett, Musheer Khan.
+- **MI** (21 kept, 10.65 cr left): release Keshav Maharaj (24%), Quinton de Kock, Trent Boult, Mahipal Lomror, Mohammad Izhar, Mayank Rawat, Ruchit Ahir, Atharva Ankolekar (50%). Toss-up, kept: Corbin Bosch, Robin Minz, Mitchell Santner, Sherfane Rutherford, Raj Bawa, Danish Malewar, Mayank Markande, Ashwani Kumar, Shardul Thakur, Krish Bhagat, Will Jacks.
+- **PBKS** (17 kept, 20.1 cr left): release Ben Dwarshuis (18%), Lockie Ferguson, Vishnu Vinod, Yash Thakur, Mitchell Owen, Praveen Dubey, Azmatullah Omarzai, Pyla Avinash (47%). Toss-up, kept: Harnoor Pannu, Vishal Nishad, Marcus Stoinis, Xavier Bartlett, Musheer Khan.
 - **RCB** (17 kept, 12.4 cr left): release Richard Gleeson (23%), Nuwan Thushara, Jordan Cox, Swapnil Singh, Jacob Duffy, Romario Shepherd, Mangesh Yadav, Satvik Deswal, Abhinandan Singh (49%). Toss-up, kept: Vicky Ostwal, Jacob Bethell, Kanishk Chouhan, Vihaan Malhotra.
 - **RR** (17 kept, 12.2 cr left): release Adam Milne (17%), Sam Curran, Dasun Shanaka, Kwena Maphaka, Vignesh Puthur, Yudhvir Singh, Ravi Singh, Kuldeep Sen, Lhuan-dre Pretorius, Sushant Mishra (50%). Toss-up, kept: Tushar Deshpande, Emanjot Chahal, Aman Rao, Shubham Dubey.
 - **SRH** (21 kept, 13.4 cr left): release Brydon Carse (22%), David Payne, Kamindu Mendis, Dilshan Madushanka, Gerald Coetzee, Shivam Mavi, Amit Kumar, Jaydev Unadkat (48%). Toss-up, kept: Harshal Patel, Onkar Tarmale, Krains Fuletra, RS Ambrish.
@@ -3643,16 +3643,16 @@ bid (cr); "rel." = released by that team's default plan:
 <!-- bidplan-sheets:start -->
 | team (kept, purse left, expected spend = share) | top five targets | still short of |
 |---|---|---|
-| CSK (17, 11.45, 10.55 = 92%) | Jake Fraser-McGurk, 24 8.4 → 4.65; Mayank Rawat (MI rel.), 27 0.3 → 1.1; Mitchell Santner (MI rel.), 34 12.4 → 5.65; Himmat Singh (LSG rel.), 30 0.3 → 1.1; Lhuan-dre Pretorius (RR rel.), 20 9.8 → 9.7 | nothing |
-| DC (17, 26.3, 25.4 = 97%) | Matheesha Pathirana (KKR rel.), 23 17 → 25.3; Mayank Rawat (MI rel.), 27 0.3 → 0.95; Jake Fraser-McGurk, 24 8.4 → 4.3; Lhuan-dre Pretorius (RR rel.), 20 9.2 → 8; Atharva Taide, 26 0.4 → 0.95 | nothing |
-| GT (16, 10.75, 10.12 = 94%) | Mayank Rawat (MI rel.), 27 0.3 → 0.95; Jake Fraser-McGurk, 24 9.8 → 4.25; Lhuan-dre Pretorius (RR rel.), 20 10 → 8.85; Atharva Taide, 26 0.3 → 0.9; Himmat Singh (LSG rel.), 30 0.5 → 1 | Wicketkeepers |
-| KKR (14, 39.95, 38.89 = 97%) | Mayank Rawat (MI rel.), 27 0.3 → 1.05; Lhuan-dre Pretorius (RR rel.), 20 9.2 → 12.3; Jake Fraser-McGurk, 24 7.4 → 4.7; Himmat Singh (LSG rel.), 30 0.35 → 1.45; Atharva Taide, 26 0.3 → 1.2 | Wicketkeepers |
-| LSG (17, 27.1, 26.02 = 96%) | Mayank Rawat (MI rel.), 27 0.3 → 1.2; Matheesha Pathirana (KKR rel.), 23 18 → 25.9; Jake Fraser-McGurk, 24 8 → 4.65; Atharva Taide, 26 0.3 → 1.35; Lhuan-dre Pretorius (RR rel.), 20 9.4 → 10.1 | nothing |
-| MI (17, 20.65, 19.94 = 97%) | Matheesha Pathirana (KKR rel.), 23 17.8 → 19.9; Lhuan-dre Pretorius (RR rel.), 20 8.8 → 9.1; Atharva Taide, 26 0.35 → 0.95; Jake Fraser-McGurk, 24 7.8 → 5.9; Himmat Singh (LSG rel.), 30 0.4 → 0.85 | nothing |
-| PBKS (17, 18.45, 17.76 = 96%) | Mayank Rawat (MI rel.), 27 0.3 → 0.9; Himmat Singh (LSG rel.), 30 0.3 → 0.95; Atharva Taide, 26 0.3 → 0.9; Jake Fraser-McGurk, 24 7.8 → 3.95; Matheesha Pathirana (KKR rel.), 23 17.6 → 17.05 | Wicketkeepers |
-| RCB (17, 12.4, 11.85 = 96%) | Mayank Rawat (MI rel.), 27 0.3 → 0.85; Mitchell Santner (MI rel.), 34 13.4 → 4.7; Lhuan-dre Pretorius (RR rel.), 20 10 → 9.8; Jake Fraser-McGurk, 24 9.4 → 3.65; Atharva Taide, 26 0.3 → 0.85 | Spinners |
-| RR (17, 12.2, 11.68 = 96%) | Mayank Rawat (MI rel.), 27 0.3 → 1.05; Jake Fraser-McGurk, 24 9.4 → 4.5; Mitchell Santner (MI rel.), 34 13 → 6.2; Atharva Taide, 26 0.3 → 0.75; Himmat Singh (LSG rel.), 30 0.4 → 0.7 | nothing |
-| SRH (17, 22.45, 21.29 = 95%) | Himmat Singh (LSG rel.), 30 0.3 → 1.7; Mayank Rawat (MI rel.), 27 0.3 → 0.9; Matheesha Pathirana (KKR rel.), 23 18.6 → 21.55; Lhuan-dre Pretorius (RR rel.), 20 9.2 → 10.95; Jake Fraser-McGurk, 24 8.2 → 3.65 | Spinners |
+| CSK (17, 11.45, 10.56 = 92%) | Jake Fraser-McGurk, 24 8.4 → 4.9; Mayank Rawat (MI rel.), 27 0.3 → 1.15; Mitchell Santner (MI rel.), 34 11.8 → 5.95; Atharva Taide, 26 0.3 → 1; Himmat Singh (LSG rel.), 30 0.35 → 1.05 | nothing |
+| DC (17, 26.3, 25.55 = 97%) | Matheesha Pathirana (KKR rel.), 23 16.6 → 25.25; Mayank Rawat (MI rel.), 27 0.3 → 0.85; Jake Fraser-McGurk, 24 8 → 4.35; Lhuan-dre Pretorius (RR rel.), 20 9.4 → 8.35; Atharva Taide, 26 0.3 → 0.85 | nothing |
+| GT (16, 10.75, 10.15 = 94%) | Mayank Rawat (MI rel.), 27 0.3 → 1.05; Jake Fraser-McGurk, 24 9 → 4.9; Lhuan-dre Pretorius (RR rel.), 20 9.8 → 8.9; Himmat Singh (LSG rel.), 30 0.4 → 1.05; Atharva Taide, 26 0.35 → 1.05 | Wicketkeepers |
+| KKR (14, 39.95, 38.93 = 97%) | Mayank Rawat (MI rel.), 27 0.3 → 1.05; Lhuan-dre Pretorius (RR rel.), 20 8.6 → 11.9; Jake Fraser-McGurk, 24 7.4 → 4.6; Atharva Taide, 26 0.3 → 1.25; Himmat Singh (LSG rel.), 30 0.35 → 1.3 | Wicketkeepers |
+| LSG (17, 27.1, 25.85 = 95%) | Mayank Rawat (MI rel.), 27 0.3 → 1.4; Matheesha Pathirana (KKR rel.), 23 16.6 → 25.4; Jake Fraser-McGurk, 24 8 → 4.5; Atharva Taide, 26 0.6 → 1.55; Lhuan-dre Pretorius (RR rel.), 20 9.2 → 7.4 | nothing |
+| MI (17, 16.65, 15.89 = 95%) | Atharva Taide, 26 0.3 → 1.05; Himmat Singh (LSG rel.), 30 0.4 → 0.95; Rovman Powell (KKR rel.), 33 0.5 → 1.1; Jake Fraser-McGurk, 24 8.2 → 3.45; Lhuan-dre Pretorius (RR rel.), 20 8.6 → 7.15 | nothing |
+| PBKS (17, 20.1, 19.38 = 96%) | Mayank Rawat (MI rel.), 27 0.3 → 0.95; Matheesha Pathirana (KKR rel.), 23 16.6 → 18.7; Himmat Singh (LSG rel.), 30 0.3 → 0.9; Jake Fraser-McGurk, 24 8 → 4.2; Atharva Taide, 26 0.3 → 0.9 | Wicketkeepers |
+| RCB (17, 12.4, 11.87 = 96%) | Mayank Rawat (MI rel.), 27 0.3 → 0.9; Mitchell Santner (MI rel.), 34 13.2 → 4.8; Lhuan-dre Pretorius (RR rel.), 20 9.2 → 9.85; Akeal Hosein (CSK rel.), 33 4.4 → 1.1; Jake Fraser-McGurk, 24 8.6 → 3.55 | Spinners |
+| RR (17, 12.2, 11.51 = 94%) | Mayank Rawat (MI rel.), 27 0.3 → 1.2; Jake Fraser-McGurk, 24 8.8 → 4.65; Mitchell Santner (MI rel.), 34 13 → 6; Himmat Singh (LSG rel.), 30 0.4 → 0.9; Atharva Taide, 26 0.3 → 0.9 | nothing |
+| SRH (17, 22.45, 21.12 = 94%) | Mayank Rawat (MI rel.), 27 0.3 → 1.2; Lhuan-dre Pretorius (RR rel.), 20 8.8 → 11.65; Jake Fraser-McGurk, 24 8 → 4.85; Matheesha Pathirana (KKR rel.), 23 18.6 → 21.25; Atharva Taide, 26 0.3 → 1.65 | Spinners |
 <!-- bidplan-sheets:end -->
 
 The max bids now differ down a list (with "auction" they were the purse left on every row) and the plans
